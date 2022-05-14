@@ -31,7 +31,7 @@ const Header = () => {
             </TextBold>
             <Desk>
                 <CurrentDesk onClick={handleToggle}>
-                    {current ? current.name: '+'}
+                    {current ? current.name: 'Не выбрана'}
                 </CurrentDesk>
 
                 <SelectDesk active={activeDeskList} refer={ref}>
@@ -42,7 +42,7 @@ const Header = () => {
                             </DeskItem>
                         ))
                     }
-                    <DeskItem hoverDarkness={0.8} topDivider={'10px'} onClick={handleCreate}>
+                    <DeskItem hoverDarkness={0.3} topDivider={'10px'} onClick={handleCreate}>
                         + Добавить новую доску
                     </DeskItem>
                 </SelectDesk>

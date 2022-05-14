@@ -10,7 +10,7 @@ export const SelectDeskWrap = styled.ul<ISelectDeskWrapProps>`
   position: absolute;
   left: 0;
   top: 40px;
-  background: rgba(255,255,255,0.8);
+  background: rgba(255,255,255,0.95);
   color: #000;
   border-radius: 5px;
   list-style: none;
@@ -25,7 +25,7 @@ export const DeskItem = styled.li<IDeskItemProps>`
 
   &:hover {
     cursor: pointer;
-    background: rgba(255, 255, 255, ${props => props.hoverDarkness? props.hoverDarkness : 0.2});
+    background: rgba(101, 78, 97, ${props => props.hoverDarkness? props.hoverDarkness : 0.2});
   }
 `
 

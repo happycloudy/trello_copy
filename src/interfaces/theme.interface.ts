@@ -1,12 +1,7 @@
 export interface ITheme {
     colors: {
-        primary: string
-        secondary: string
-        success: string
-        danger: string
-
-        bg: string,
         font: string,
+        fontGrey: string,
     }
 
     media: {
@@ -21,10 +16,6 @@ export interface ITheme {
         container: { width: number }
         footer: { height: number }
         modal: { width: number }
-    }
-
-    durations: {
-        ms300: number
     }
 
     order: {

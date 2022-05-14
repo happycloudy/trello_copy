@@ -22,9 +22,9 @@ const desksSlice = createSlice({
             state.current = action.payload
         },
         createDesk: (state) => {
-            let createdDesk = {
+            let createdDesk: IDesk = {
                 name: 'Новая доска',
-                tasks: [],
+                columns: [],
                 id: randomId()
             }
             state.desks.push(createdDesk)

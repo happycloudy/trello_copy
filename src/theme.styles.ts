@@ -2,13 +2,8 @@ import {ITheme} from "./interfaces/theme.interface";
 
 export const theme: ITheme = {
     colors: {
-        primary: '#7986cb',
-        secondary: '#2b2b2b',
-        success: '#4caf50',
-        danger: '#f44336',
-
-        bg: '#E5E4E8',
         font: '#19191B',
+        fontGrey: '#172b4d',
     },
 
     media: {
@@ -26,10 +21,6 @@ export const theme: ITheme = {
         modal: { width: 540 },
     },
 
-    // in ms
-    durations: {
-        ms300: 300,
-    },
 
     // z-index
     order: {

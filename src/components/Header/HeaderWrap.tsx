@@ -8,7 +8,6 @@ export const HeaderWrap = styled.header`
   color: #fff;
   background: hsl(311, 13.7%, 35.8%);
   height: 44px;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Noto Sans, Ubuntu, Droid Sans, Helvetica Neue, sans-serif;
   padding: 10px;
   position: fixed;
   top: 0;
