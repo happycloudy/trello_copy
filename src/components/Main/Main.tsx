@@ -19,7 +19,6 @@ const List = styled.div`
 
 const Main = () => {
     const columns = useAppSelector(state => state.desks.current? state.desks.current.columns: [])
-    console.log(columns)
 
     return (
         <MainWrapper>

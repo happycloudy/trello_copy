@@ -20,7 +20,10 @@ const Header = () => {
 
 
     const handleToggle = () => setActiveDeskList(!activeDeskList)
-    const handleSelect = (desk: IDesk) => dispatch(selectDesk(desk))
+    const handleSelect = (desk: IDesk) => {
+        dispatch(selectDesk(desk))
+        setActiveDeskList(false)
+    }
     const handleCreate = () => dispatch(createDesk())
     useOnClickOutside(ref, () => setActiveDeskList(false))
 
