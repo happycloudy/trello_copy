@@ -17,11 +17,14 @@ export const SelectDeskWrap = styled.ul<ISelectDeskWrapProps>`
 
 `
 
-export const DeskItem = styled.li<IDeskItemProps>`
+export const DeskListItem = styled.li<IDeskItemProps>`
   padding: 10px 10px;
   white-space: nowrap;
   margin-top: ${props => props.topDivider? props.topDivider: 0};
   user-select: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
   &:hover {
     cursor: pointer;

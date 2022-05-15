@@ -4,6 +4,8 @@ export const theme: ITheme = {
     colors: {
         font: '#19191B',
         fontGrey: '#172b4d',
+        bgGrey: '#ebecf0',
+        bgGreyHover: '#ccced9',
     },
 
     media: {

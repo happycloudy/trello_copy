@@ -7,19 +7,25 @@ const TestColumns: IColumn[] = [
         id: randomId(),
         tasks: [
             {
-                author: "Автор 1",
+                author: [],
                 title: 'Задание 1',
-                id: randomId()
+                id: randomId(),
+                description: '',
+                comments: [],
             },
             {
-                author: "Автор 1",
+                author: [],
                 title: 'Задание 2',
-                id: randomId()
+                id: randomId(),
+                description: '',
+                comments: [],
             },
             {
-                author: "Автор 1",
+                author: [],
                 title: 'Задание 3',
-                id: randomId()
+                id: randomId(),
+                description: '',
+                comments: [],
             },
         ]
     },
@@ -28,9 +34,11 @@ const TestColumns: IColumn[] = [
         id: randomId(),
         tasks: [
             {
-                author: "Автор 2",
+                author: [],
                 title: 'Задание 4',
-                id: randomId()
+                id: randomId(),
+                description: '',
+                comments: [],
             }
         ]
     },

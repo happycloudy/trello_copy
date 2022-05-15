@@ -6,7 +6,8 @@ export const ColumnWrap = styled.div`
   align-items: flex-start;
   flex-direction: column;
   padding: 15px 10px;
-  background: #ebecf0;
+  background: ${({theme}) => theme.colors.bgGrey};
   border-radius: 5px;
   min-width: 300px;
+  height: max-content;
 `

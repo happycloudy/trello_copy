@@ -1,12 +1,13 @@
 import React, {useRef, useState} from 'react';
 import {HeaderWrap} from "./HeaderWrap";
 import {CurrentDesk, Desk} from "./Desk";
-import SelectDesk, {DeskItem} from "./DeskList";
+import SelectDesk, {DeskListItem} from "./DeskList";
 import {useOnClickOutside} from "../../hooks";
 import styled from "styled-components";
 import {useAppDispatch, useAppSelector} from "../../store/hooks";
 import {createDesk, selectDesk} from "../../store/desks/desks.slice";
 import {IDesk} from "../../interfaces/desk.interface";
+import DeskItem from "./DeskItem";
 
 const TextBold = styled.div`
   font-weight: 600;
@@ -25,6 +26,9 @@ const Header = () => {
         setActiveDeskList(false)
     }
     const handleCreate = () => dispatch(createDesk())
+
+
+
     useOnClickOutside(ref, () => setActiveDeskList(false))
 
     return (
@@ -34,20 +38,20 @@ const Header = () => {
             </TextBold>
             <Desk>
                 <CurrentDesk onClick={handleToggle}>
-                    {current ? current.name: 'Не выбрана'}
+                    {current ? current.name : 'Не выбрана'}
                 </CurrentDesk>
 
                 <SelectDesk active={activeDeskList} refer={ref}>
                     {
                         desks.map(desk => (
-                            <DeskItem key={desk.id} onClick={() => handleSelect(desk)}>
-                                {desk.name}
-                            </DeskItem>
+                            <DeskListItem key={desk.id}>
+                                <DeskItem desk={desk} handleSelect={() => handleSelect(desk)}/>
+                            </DeskListItem>
                         ))
                     }
-                    <DeskItem hoverDarkness={0.3} topDivider={'10px'} onClick={handleCreate}>
+                    <DeskListItem hoverDarkness={0.3} topDivider={'10px'} onClick={handleCreate}>
                         + Добавить новую доску
-                    </DeskItem>
+                    </DeskListItem>
                 </SelectDesk>
             </Desk>
         </HeaderWrap>

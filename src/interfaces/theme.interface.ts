@@ -2,6 +2,8 @@ export interface ITheme {
     colors: {
         font: string,
         fontGrey: string,
+        bgGrey: string,
+        bgGreyHover: string,
     }
 
     media: {

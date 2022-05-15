@@ -1,45 +1,89 @@
-import React, {useRef, useState} from 'react';
+import React, {useRef} from 'react';
 import ModalWrap from "../ModalWrap";
 import styled from "styled-components";
 import {useOnClickOutside} from "../../../hooks";
-import {ITask} from "../../../interfaces/desk.interface";
+import {IColumn, ITask} from "../../../interfaces/desk.interface";
+import TextArea from "../../TextArea/TextArea";
+import {useAppDispatch} from "../../../store/hooks";
+import {renameTask} from "../../../store/desks/desks.slice";
+import {CloseIcon} from "../../Icons/CloseIcon";
+import Aside from "./Aside";
+import Description from "./Description";
+import Comments from "./Comments";
 
 interface ISettingsModalProps {
     active: boolean,
     handleClose: () => void,
     task: ITask,
+    column: IColumn,
 }
 
 const Modal = styled.div`
   background: #f4f5f7;
   border-radius: 5px;
   padding: 20px 15px;
+  min-width: 50vw;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 `
-
 const TitleWrap = styled.div`
-  cursor: text;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
 `
 const Title = styled.textarea`
   font-size: 20px;
   font-weight: 600;
   line-height: 24px;
+  height: 30px;
   resize: none;
   cursor: text;
   border: none;
+  padding-left: 5px;
+  
+`
+const TitleSmall = styled.div`
+  font-size: 14px;
+  margin-left: 5px;
+`
+
+const UnderlineText = styled.span`
+  text-decoration: underline;
+  color: #055a8c;
+`
+
+const ContentWrap = styled.div`
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-left: 5px;
+`
+
+const TextWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex-grow: 3;
+`
+const DescriptionWrap = styled.section`
+  display: flex;
+  flex-direction: column;
+`
+const CommentsWrap = styled.section`
+  display: flex;
+  flex-direction: column;
 `
 
 
-const SettingsModal = ({active, handleClose, task}: ISettingsModalProps) => {
-    const [editTitle, setEditTitle] = useState(true)
+const SettingsModal = ({active, handleClose, task, column}: ISettingsModalProps) => {
     const ref = useRef(null)
+    const dispatch = useAppDispatch()
 
-    const handleEditTitle = () => setEditTitle(false)
-    const handleEnd = (e: any) => {
-        setEditTitle(true)
-        console.log('Новое название - ' + e.target.value)
-    }
-    useOnClickOutside(ref, (e) => {
-        // handleEnd(e)
+    const handleChange = (e: any) => dispatch(renameTask({column: column, task: task, title: e.target.value}))
+    useOnClickOutside(ref, () => {
         handleClose()
     })
 
@@ -47,15 +91,28 @@ const SettingsModal = ({active, handleClose, task}: ISettingsModalProps) => {
         active ?
             <ModalWrap>
                 <Modal ref={ref}>
-                    <TitleWrap onClick={handleEditTitle}>
-                        <Title defaultValue={task.title}
-                               disabled={editTitle}
-                               spellCheck={false}
-                               dir={'auto'}
-                               maxLength={512}
-                               onBlur={handleEnd}
-                        />
+                    <CloseIcon onClick={handleClose}/>
+
+                    <TitleWrap>
+                        <TextArea value={task.title} handleChange={handleChange} StyledTextArea={Title}/>
+                        <TitleSmall>
+                            В колонке <UnderlineText>{column.title}</UnderlineText>
+                        </TitleSmall>
                     </TitleWrap>
+
+                    <ContentWrap>
+                        <TextWrap>
+                            <DescriptionWrap>
+                                <Description task={task}/>
+                            </DescriptionWrap>
+                            <CommentsWrap>
+                                <Comments/>
+                            </CommentsWrap>
+                        </TextWrap>
+
+                        <Aside/>
+                    </ContentWrap>
+
                 </Modal>
             </ModalWrap> :
             <></>

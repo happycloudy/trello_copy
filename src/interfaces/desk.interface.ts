@@ -1,7 +1,14 @@
+export interface IComment {
+    author?: string,
+    text: string,
+}
+
 export interface ITask {
-    author: string,
+    author: string[],
     id: number,
     title: string,
+    description: string,
+    comments: IComment[]
 }
 
 export interface IColumn {
