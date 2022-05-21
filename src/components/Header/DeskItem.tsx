@@ -4,6 +4,7 @@ import {AiOutlineEdit} from "react-icons/ai";
 import {IDesk} from "../../interfaces/desk.interface";
 import {renameDesk} from "../../store/desks/desks.slice";
 import {useAppDispatch} from "../../store/hooks";
+import TextareaAutosize from "react-textarea-autosize";
 
 interface IDeskItemProps {
     desk: IDesk,
@@ -17,7 +18,7 @@ const Wrap = styled.div`
   align-items: center;
 `
 
-const StyledDeskItem = styled.textarea`
+const StyledDeskItem = styled(TextareaAutosize)`
   resize: none;
   border: none;
   font-family: inherit;
@@ -45,13 +46,23 @@ const DeskItem = ({desk, handleSelect}:IDeskItemProps) => {
             handleSelect()
         }
     }
+    const handleKeyEnter = (e: any) => {
+        if (e.keyCode === 13) {
+            setEditable(false)
+            console.log('Новое название - ' + e.target.value)
+        }
+    }
     const handleBlur = () => setEditable(false)
 
 
     return (
        <>
            <Wrap onClick={handleSelectDesk}>
-               <StyledDeskItem value={desk.name} onChange={(e:any) => handleChange(e, desk)} disabled={!editable} onBlur={handleBlur}/>
+               <StyledDeskItem value={desk.name}
+                               onChange={(e:any) => handleChange(e, desk)}
+                               onKeyDown={handleKeyEnter}
+                               disabled={!editable}
+                               onBlur={handleBlur}/>
            </Wrap>
            <AiOutlineEdit style={{marginLeft: '10px'}} onClick={toggleRenameDesk}/>
        </>

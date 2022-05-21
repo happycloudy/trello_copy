@@ -4,16 +4,21 @@ import styled, {StyledComponent} from "styled-components";
 interface ITextAreaProps {
     value: string,
     handleChange: (e: any) => void,
-    StyledTextArea: StyledComponent<"textarea", any>
+    StyledTextArea: StyledComponent<any, any>,
+    wrapStyle?: string
 }
 
-const Wrap = styled.div`
+interface IWrapProps {
+    styles?: string,
+}
+
+const Wrap = styled.div<IWrapProps>`
   cursor: pointer;
-  height: 28px;
-  width: fit-content;
+  width: 100%;
+  ${props => props.styles}
 `
 
-const TextArea = ({value, handleChange, StyledTextArea}: ITextAreaProps) => {
+const TextArea = ({value, handleChange, StyledTextArea, wrapStyle}: ITextAreaProps) => {
     const [edit, setEdit] = useState(false)
 
     const handleEditStart = () => setEdit(true)
@@ -23,14 +28,14 @@ const TextArea = ({value, handleChange, StyledTextArea}: ITextAreaProps) => {
     }
 
     const handleKeyEnter = (e: any) => {
-        if(e.keyCode === 13){
+        if (e.keyCode === 13) {
             setEdit(false)
             console.log('Новое название - ' + e.target.value)
         }
     }
 
     return (
-        <Wrap onClick={handleEditStart}>
+        <Wrap onClick={handleEditStart} styles={wrapStyle}>
             <StyledTextArea
                 value={value}
                 disabled={!edit}

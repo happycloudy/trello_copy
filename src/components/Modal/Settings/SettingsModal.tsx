@@ -4,6 +4,7 @@ import styled from "styled-components";
 import {useOnClickOutside} from "../../../hooks";
 import {IColumn, ITask} from "../../../interfaces/desk.interface";
 import TextArea from "../../TextArea/TextArea";
+import TextareaAutosize from 'react-textarea-autosize';
 import {useAppDispatch} from "../../../store/hooks";
 import {renameTask} from "../../../store/desks/desks.slice";
 import {CloseIcon} from "../../Icons/CloseIcon";
@@ -28,40 +29,35 @@ const Modal = styled.div`
   flex-direction: column;
   gap: 20px;
 `
-const TitleWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 5px;
-`
-const Title = styled.textarea`
+const Title = styled(TextareaAutosize)`
   font-size: 20px;
   font-weight: 600;
-  line-height: 24px;
-  height: 30px;
+  line-height: 23px;
   resize: none;
   cursor: text;
   border: none;
-  padding-left: 5px;
-  
+  padding: 5px 10px;
+  width: 100%;
+  font-family: inherit;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  display: block;
 `
 const TitleSmall = styled.div`
   font-size: 14px;
   margin-left: 5px;
+  margin-top: 5px;
 `
-
 const UnderlineText = styled.span`
   text-decoration: underline;
   color: #055a8c;
 `
-
 const ContentWrap = styled.div`
   display: flex;
   justify-content: space-between;
   gap: 20px;
   margin-left: 5px;
 `
-
 const TextWrap = styled.div`
   display: flex;
   flex-direction: column;
@@ -92,14 +88,14 @@ const SettingsModal = ({active, handleClose, task, column}: ISettingsModalProps)
             <ModalWrap>
                 <Modal ref={ref}>
                     <CloseIcon onClick={handleClose}/>
-
-                    <TitleWrap>
-                        <TextArea value={task.title} handleChange={handleChange} StyledTextArea={Title}/>
+                    <div>
+                        <TextArea value={task.title} handleChange={handleChange} StyledTextArea={Title} wrapStyle={`
+                            width: 90%;
+                        `}/>
                         <TitleSmall>
                             В колонке <UnderlineText>{column.title}</UnderlineText>
                         </TitleSmall>
-                    </TitleWrap>
-
+                    </div>
                     <ContentWrap>
                         <TextWrap>
                             <DescriptionWrap>
@@ -112,7 +108,6 @@ const SettingsModal = ({active, handleClose, task, column}: ISettingsModalProps)
 
                         <Aside/>
                     </ContentWrap>
-
                 </Modal>
             </ModalWrap> :
             <></>

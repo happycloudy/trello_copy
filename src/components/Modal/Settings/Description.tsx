@@ -30,10 +30,15 @@ const DescriptionArea = styled.textarea`
 `
 
 const Description = ({task}: IDescriptionProps) => {
+    const handleResize = (e: any) => {
+        e.target.style.height = "auto";
+        e.target.style.height = (e.target.scrollHeight) + "px";
+    };
+
     return (
         <>
             <Subtitle>Описание</Subtitle>
-            <DescriptionArea placeholder={'Добавьте более подробное описание...'}/>
+            <DescriptionArea onInput={handleResize} placeholder={'Добавьте более подробное описание...'}/>
         </>
     );
 };

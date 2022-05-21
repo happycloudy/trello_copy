@@ -20,6 +20,9 @@ const TaskWrap = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
 
   &:hover {
     background: rgba(100, 100, 100, 0.05);
@@ -49,7 +52,9 @@ const Task = ({task, column}: ITaskProps) => {
             <SettingsModal task={task} column={column} active={activeSettings} handleClose={handleCloseSettings}/>
             <TaskWrap onClick={handleOpenSettings}>
                 {task.title}
-                <FiTrash onClick={handleRemove}/>
+                <div style={{minWidth: '16px'}}>
+                    <FiTrash onClick={handleRemove}/>
+                </div>
             </TaskWrap>
         </>
     );

@@ -7,20 +7,21 @@ import TextArea from "../TextArea/TextArea";
 import {useAppDispatch} from "../../store/hooks";
 import {addTask, renameColumn} from "../../store/desks/desks.slice";
 import {TaskGhost} from "../Task/TaskGhost";
+import TextareaAutosize from "react-textarea-autosize";
 
 
-const ColumnTitle = styled.textarea`
+const ColumnTitle = styled(TextareaAutosize)`
   color: ${({theme}) => theme.colors.fontGrey};
   overflow-wrap: break-word;
   resize: none;
   border: none;
-  height: 28px;
+  min-height: 28px;
+  width: 100%;
   font-size: 14px;
   font-weight: 600;
   font-family: inherit;
   font-stretch: 100%;
   line-height: 20px;
-  margin-left: 5px;
   cursor: pointer;
 `
 

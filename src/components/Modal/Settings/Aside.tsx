@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import UsersTooltip from "./Tooltips/Users/UsersTooltip";
 
 const AsideWrap = styled.aside`
   display: flex;
@@ -41,6 +42,7 @@ const Aside = () => {
                 Добавить на карточку
             </AsideTitle>
             <AsideList>
+                <UsersTooltip/>
                 <ListItem>
                     Участники
                 </ListItem>
