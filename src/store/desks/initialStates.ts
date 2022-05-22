@@ -6,7 +6,7 @@ interface IInitialDeskStates {
     task: () => ITask,
 }
 
-export const initialDeskStates: IInitialDeskStates = {
+export const initialStates: IInitialDeskStates = {
     column: () => ({
         tasks: [],
         title: 'Новый столбец',
@@ -16,6 +16,7 @@ export const initialDeskStates: IInitialDeskStates = {
         title: 'Новая задача',
         author: [],
         id: randomId(),
+        markers: [],
         description: '',
         comments: [],
     })

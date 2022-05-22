@@ -1,3 +1,5 @@
+import {IMarker} from "../store/markers/markers.slice";
+
 export interface IComment {
     author?: string,
     text: string,
@@ -7,6 +9,7 @@ export interface ITask {
     author: string[],
     id: number,
     title: string,
+    markers: IMarker[],
     description: string,
     comments: IComment[]
 }

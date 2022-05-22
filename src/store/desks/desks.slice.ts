@@ -6,9 +6,9 @@ import {
     IPayloadRemoveTask,
     IPayloadRenameColumn,
     IPayloadRenameDesk,
-    IPayloadRenameTask
+    IPayloadRenameTask, IPayloadToggleMarker
 } from "./payload-actions.interface";
-import {initialDeskStates} from "./InitialDeskStates";
+import {initialStates} from "./initialStates";
 
 interface IInitialInterface {
     desks: IDesk[],
@@ -36,10 +36,10 @@ const desksSlice = createSlice({
             }
             state.desks.push(createdDesk)
         },
-        renameDesk: (state,action:PayloadAction<IPayloadRenameDesk>) => {
+        renameDesk: (state, action: PayloadAction<IPayloadRenameDesk>) => {
             let deskIndex = 0
             state.desks.forEach((desk, index) => {
-                if(desk.id === action.payload.desk.id){
+                if (desk.id === action.payload.desk.id) {
                     deskIndex = index
                 }
             })
@@ -73,7 +73,7 @@ const desksSlice = createSlice({
             state.current!.columns[columnIndex].tasks[taskIndex].title = action.payload.title
         },
         addColumn: (state) => {
-            state.current!.columns.push(initialDeskStates.column())
+            state.current!.columns.push(initialStates.column())
         },
         addTask: (state, action) => {
             let columnIndex = 0
@@ -83,7 +83,7 @@ const desksSlice = createSlice({
                 }
             })
 
-            state.current!.columns[columnIndex].tasks.push(initialDeskStates.task())
+            state.current!.columns[columnIndex].tasks.push(initialStates.task())
         },
         removeTask: (state, action: PayloadAction<IPayloadRemoveTask>) => {
             let columnIndex = 0
@@ -94,12 +94,47 @@ const desksSlice = createSlice({
             })
 
             state.current!.columns[columnIndex].tasks = state.current!.columns[columnIndex].tasks.filter(task => task.id !== action.payload.task.id)
+        },
+        toggleMarker: (state, action: PayloadAction<IPayloadToggleMarker>) => {
+            let columnIndex = 0
+            state.current!.columns.forEach((column, index) => {
+                if (column.id === action.payload.column.id) {
+                    columnIndex = index
+                }
+            })
+
+            let taskIndex = 0
+            state.current!.columns[columnIndex].tasks.forEach((task, index) => {
+                if (task.id === action.payload.task.id) {
+                    taskIndex = index
+                }
+            })
+
+            const marker = state.current!.columns[columnIndex].tasks[taskIndex].markers.find(marker => marker.id === action.payload.marker.id)
+            if (marker) {
+                state.current!.columns[columnIndex].tasks[taskIndex].markers =
+                    state.current!.columns[columnIndex].tasks[taskIndex].markers.filter(marker =>
+                        marker.id !== action.payload.marker.id
+                    )
+            } else {
+                state.current!.columns[columnIndex].tasks[taskIndex].markers.push(action.payload.marker)
+            }
         }
     },
     extraReducers: {},
 })
 
 
-export const {selectDesk, createDesk, renameColumn, renameTask, addColumn, addTask, removeTask, renameDesk} = desksSlice.actions
+export const {
+    selectDesk,
+    createDesk,
+    renameColumn,
+    renameTask,
+    addColumn,
+    addTask,
+    removeTask,
+    renameDesk,
+    toggleMarker
+} = desksSlice.actions
 
 export default desksSlice.reducer

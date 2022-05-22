@@ -11,6 +11,7 @@ import {CloseIcon} from "../../Icons/CloseIcon";
 import Aside from "./Aside";
 import Description from "./Description";
 import Comments from "./Comments";
+import Markers from "./Markers";
 
 interface ISettingsModalProps {
     active: boolean,
@@ -36,7 +37,7 @@ const Title = styled(TextareaAutosize)`
   resize: none;
   cursor: text;
   border: none;
-  padding: 5px 10px;
+  padding: 5px 10px 5px 0;
   width: 100%;
   font-family: inherit;
   overflow: hidden;
@@ -96,6 +97,7 @@ const SettingsModal = ({active, handleClose, task, column}: ISettingsModalProps)
                             В колонке <UnderlineText>{column.title}</UnderlineText>
                         </TitleSmall>
                     </div>
+                    <Markers task={task} column={column} markers={task.markers}/>
                     <ContentWrap>
                         <TextWrap>
                             <DescriptionWrap>
@@ -106,7 +108,7 @@ const SettingsModal = ({active, handleClose, task, column}: ISettingsModalProps)
                             </CommentsWrap>
                         </TextWrap>
 
-                        <Aside/>
+                        <Aside task={task} column={column}/>
                     </ContentWrap>
                 </Modal>
             </ModalWrap> :

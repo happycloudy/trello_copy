@@ -1,9 +1,11 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import deskReducer from './desks/desks.slice'
+import markersReducer from './markers/markers.slice'
 
 export const store = configureStore({
   reducer: {
-    desks: deskReducer
+    desks: deskReducer,
+    markers: markersReducer
   },
 });
 

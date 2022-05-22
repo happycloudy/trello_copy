@@ -10,6 +10,7 @@ const TestColumns: IColumn[] = [
                 author: [],
                 title: 'Задание 1',
                 id: randomId(),
+                markers: [],
                 description: '',
                 comments: [],
             },
@@ -17,6 +18,7 @@ const TestColumns: IColumn[] = [
                 author: [],
                 title: 'Задание 2',
                 id: randomId(),
+                markers: [],
                 description: '',
                 comments: [],
             },
@@ -24,6 +26,7 @@ const TestColumns: IColumn[] = [
                 author: [],
                 title: 'Задание 3',
                 id: randomId(),
+                markers: [],
                 description: '',
                 comments: [],
             },
@@ -37,6 +40,13 @@ const TestColumns: IColumn[] = [
                 author: [],
                 title: 'Задание 4',
                 id: randomId(),
+                markers: [
+                    {
+                        text: 'Marketing',
+                        color: '#61bd4f',
+                        id: 0,
+                    }
+                ],
                 description: '',
                 comments: [],
             }

@@ -1,5 +1,13 @@
 import styled from "styled-components";
 import UsersTooltip from "./Tooltips/Users/UsersTooltip";
+import ListItem from "./Tooltips/ListItem";
+import {IColumn, ITask} from "../../../interfaces/desk.interface";
+import MarkerTooltip from "./Tooltips/Markers/MarkerTooltip";
+
+interface IAsideProps {
+    task: ITask,
+    column: IColumn
+}
 
 const AsideWrap = styled.aside`
   display: flex;
@@ -22,33 +30,15 @@ const AsideList = styled.ul`
   width: 100%;
 `
 
-const ListItem = styled.li`
-  padding: 5px 10px;
-  background: ${({theme}) => theme.colors.bgGrey};
-  border-radius: 5px;
-  width: 100%;
-  cursor: pointer;
-  font-size: 14px;
-  
-  &:hover {
-    background: ${({theme}) => theme.colors.bgGreyHover};
-  }
-`
-
-const Aside = () => {
+const Aside = ({column, task}: IAsideProps) => {
     return (
         <AsideWrap>
             <AsideTitle>
                 Добавить на карточку
             </AsideTitle>
             <AsideList>
-                <UsersTooltip/>
-                <ListItem>
-                    Участники
-                </ListItem>
-                <ListItem>
-                    Метки
-                </ListItem>
+                <UsersTooltip task={task} column={column}/>
+                <MarkerTooltip task={task} column={column}/>
                 <ListItem>
                     Даты
                 </ListItem>

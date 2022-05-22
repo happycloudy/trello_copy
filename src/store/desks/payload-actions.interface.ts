@@ -1,4 +1,5 @@
 import {IColumn, IDesk, ITask} from "../../interfaces/desk.interface";
+import {IMarker} from "../markers/markers.slice";
 
 export interface IPayloadRenameDesk {
     desk: IDesk,
@@ -19,4 +20,10 @@ export interface IPayloadRenameTask {
 export interface IPayloadRemoveTask {
     task: ITask,
     column: IColumn,
+}
+
+export interface IPayloadToggleMarker {
+    task: ITask,
+    column: IColumn,
+    marker: IMarker,
 }

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import styled, {StyledComponent} from "styled-components";
 
 interface ITextAreaProps {
@@ -20,6 +20,7 @@ const Wrap = styled.div<IWrapProps>`
 
 const TextArea = ({value, handleChange, StyledTextArea, wrapStyle}: ITextAreaProps) => {
     const [edit, setEdit] = useState(false)
+    const ref = useRef<any>(null);
 
     const handleEditStart = () => setEdit(true)
     const handleEditEnd = (e: any) => {
@@ -34,6 +35,12 @@ const TextArea = ({value, handleChange, StyledTextArea, wrapStyle}: ITextAreaPro
         }
     }
 
+    useEffect(() => {
+        if (ref.current && edit) {
+            ref.current.focus();
+        }
+    }, [edit]);
+
     return (
         <Wrap onClick={handleEditStart} styles={wrapStyle}>
             <StyledTextArea
@@ -41,6 +48,7 @@ const TextArea = ({value, handleChange, StyledTextArea, wrapStyle}: ITextAreaPro
                 disabled={!edit}
                 spellCheck={false}
                 dir={'auto'}
+                ref={ref}
                 maxLength={512}
                 onBlur={handleEditEnd}
                 onChange={handleChange}
