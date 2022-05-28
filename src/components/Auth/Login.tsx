@@ -7,11 +7,18 @@ import StyledFormLabel from "./StyledComponents/StyledFormLabel";
 import StyledFormInput from "./StyledComponents/StyledFormInput";
 import StyledFormButton from "./StyledComponents/StyledFormButton";
 import StyledFormSmall from "./StyledComponents/StyledFormSmall";
+import {useForm} from "react-hook-form";
 
 const Login = () => {
+    const {register, handleSubmit} = useForm()
+
+    const onSubmit = handleSubmit(data => {
+        console.log(data)
+    })
+
     return (
         <StyledWrap>
-            <StyledForm>
+            <StyledForm onSubmit={onSubmit}>
                 <StyledFormSection>
                     <StyledFormTitle>
                         Вход
@@ -21,12 +28,12 @@ const Login = () => {
                 <StyledFormSection>
                     <StyledFormLabel>
                         Почта
-                        <StyledFormInput/>
+                        <StyledFormInput type={'email'} {...register('emailAddress', {required: true})}/>
                     </StyledFormLabel>
 
                     <StyledFormLabel>
                         Пароль
-                        <StyledFormInput type={'password'}/>
+                        <StyledFormInput type={'password'} {...register('password', {required: true})}/>
                     </StyledFormLabel>
                 </StyledFormSection>
 

@@ -1,22 +1,16 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import Header from "./components/Header/Header";
 import Main from "./components/Main/Main";
-import {Route, Routes, useNavigate} from "react-router-dom";
+import {Route, Routes} from "react-router-dom";
 import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
 import {useAppSelector} from "./store/hooks";
+import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 
 
 function App() {
     const {auth} = useAppSelector(state => state.user.user)
-    const navigate = useNavigate()
-
-    useEffect(() => {
-        if(!auth) {
-            navigate('/login')
-        }
-    }, [auth])
-
+    
     return (
         <div>
             {
@@ -26,10 +20,10 @@ function App() {
             }
 
             <Routes>
-                <Route path={'/'} element={<Main/>}/>
+                <Route path={'/'} element={<PrivateRoute><Main/></PrivateRoute>}/>
                 <Route path={'/login'} element={<Login/>}/>
                 <Route path={'/register'} element={<Register/>}/>
-                <Route path={'*'} element={<Main/>}/>
+                <Route path={'*'} element={<PrivateRoute><Main/></PrivateRoute>}/>
             </Routes>
         </div>
     );
