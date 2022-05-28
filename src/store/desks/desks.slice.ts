@@ -6,7 +6,7 @@ import {
     IPayloadRemoveTask,
     IPayloadRenameColumn,
     IPayloadRenameDesk,
-    IPayloadRenameTask, IPayloadToggleMarker
+    IPayloadRenameTask, IPayloadSelectDate, IPayloadToggleDate, IPayloadToggleMarker
 } from "./payload-actions.interface";
 import {initialStates} from "./initialStates";
 
@@ -28,6 +28,15 @@ const desksSlice = createSlice({
             if (state.current && (state.current.id === action.payload.id)) return
             state.current = action.payload
         },
+        selectDate: (state,action: PayloadAction<IPayloadSelectDate>) => {
+            const column = action.payload.column
+            const task = action.payload.task
+            const date = action.payload.date
+            const currentColumn = state.current!.columns.find(columnArrItem => columnArrItem.id === column.id)
+            const currentTask = currentColumn!.tasks.find(taskArrItem => taskArrItem.id === task.id)
+            currentTask!.date.date = date
+        },
+
         createDesk: (state) => {
             let createdDesk: IDesk = {
                 name: 'Новая доска',
@@ -36,6 +45,7 @@ const desksSlice = createSlice({
             }
             state.desks.push(createdDesk)
         },
+
         renameDesk: (state, action: PayloadAction<IPayloadRenameDesk>) => {
             let deskIndex = 0
             state.desks.forEach((desk, index) => {
@@ -72,6 +82,7 @@ const desksSlice = createSlice({
             })
             state.current!.columns[columnIndex].tasks[taskIndex].title = action.payload.title
         },
+
         addColumn: (state) => {
             state.current!.columns.push(initialStates.column())
         },
@@ -85,6 +96,7 @@ const desksSlice = createSlice({
 
             state.current!.columns[columnIndex].tasks.push(initialStates.task())
         },
+
         removeTask: (state, action: PayloadAction<IPayloadRemoveTask>) => {
             let columnIndex = 0
             state.current!.columns.forEach((column, index) => {
@@ -95,6 +107,7 @@ const desksSlice = createSlice({
 
             state.current!.columns[columnIndex].tasks = state.current!.columns[columnIndex].tasks.filter(task => task.id !== action.payload.task.id)
         },
+
         toggleMarker: (state, action: PayloadAction<IPayloadToggleMarker>) => {
             let columnIndex = 0
             state.current!.columns.forEach((column, index) => {
@@ -119,6 +132,14 @@ const desksSlice = createSlice({
             } else {
                 state.current!.columns[columnIndex].tasks[taskIndex].markers.push(action.payload.marker)
             }
+        },
+        toggleDate: (state, action: PayloadAction<IPayloadToggleDate>) => {
+            const column = action.payload.column
+            const task = action.payload.task
+            const checked = action.payload.state
+            const currentColumn = state.current!.columns.find(columnArrItem => columnArrItem.id === column.id)
+            const currentTask = currentColumn!.tasks.find(taskArrItem => taskArrItem.id === task.id)
+            currentTask!.date.completed = checked
         }
     },
     extraReducers: {},
@@ -134,7 +155,9 @@ export const {
     addTask,
     removeTask,
     renameDesk,
-    toggleMarker
+    toggleMarker,
+    selectDate,
+    toggleDate
 } = desksSlice.actions
 
 export default desksSlice.reducer

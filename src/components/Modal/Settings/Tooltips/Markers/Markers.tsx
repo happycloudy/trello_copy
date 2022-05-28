@@ -1,21 +1,17 @@
 import React from 'react';
 import styled from "styled-components";
 import {useAppDispatch, useAppSelector} from "../../../../../store/hooks";
-import chroma from "chroma-js";
 import {addMarker, IMarker} from "../../../../../store/markers/markers.slice";
 import {toggleMarker as toggleTaskMarker} from "../../../../../store/desks/desks.slice";
 import {IColumn, ITask} from "../../../../../interfaces/desk.interface";
-import {AiOutlineCheck} from "react-icons/ai/index";
-import {AiOutlineEdit} from "react-icons/ai";
+import Marker from "./Marker";
+import StyledMarker from "./StyledMarker";
 
 interface IMarkersProps {
     column: IColumn,
     task: ITask
 }
 
-interface IStyledMarkerProps {
-    color: string,
-}
 
 const StyledTitle = styled.div`
   width: 100%;
@@ -30,43 +26,8 @@ const MarkersList = styled.ul`
   gap: 5px;
   margin: 5px 0 0;
 `
-const Marker = styled.li<IStyledMarkerProps>`
-  color: #fff;
-  padding: 5px;
-  border-radius: 2px;
-  font-weight: 700;
-  cursor: pointer;
-  background: ${props => props.color};
-  transition: 0.2s;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-grow: 3;
 
-  &:hover {
-    box-shadow: -5px 0 ${props => chroma(props.color).darken().hex()};
-  }
-`
-const MarkerWrap = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
-`
-const EditBtn = styled.div`
-  height: 31px;
-  width: 31px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: 0.2s;
-  border-radius: 2px;
 
-  &:hover {
-    background: ${({theme}) => theme.colors.bgGrey};
-  }
-`
 
 const Markers = ({column, task}: IMarkersProps) => {
     const {markers} = useAppSelector(state => state.markers)
@@ -74,9 +35,7 @@ const Markers = ({column, task}: IMarkersProps) => {
 
     const toggleMarker = (marker: IMarker) => dispatch(toggleTaskMarker({marker: marker, task: task, column: column}))
     const handleAddMarker = () => dispatch(addMarker())
-    const handleEdit = () => {
-        console.log('редактируется')
-    }
+
 
     return (
         <>
@@ -86,21 +45,13 @@ const Markers = ({column, task}: IMarkersProps) => {
             <MarkersList>
                 {
                     markers.map(marker => {
-                        const isEnabled = task.markers.find(taskMarker => taskMarker.id === marker.id)
+                        const isEnabled = !!task.markers.find(taskMarker => taskMarker.id === marker.id)
                         return (
-                            <MarkerWrap key={marker.id}>
-                                <Marker onClick={() => toggleMarker(marker)} color={marker.color}>
-                                    {marker.text}
-                                    {isEnabled && <AiOutlineCheck/>}
-                                </Marker>
-                                <EditBtn onClick={handleEdit}>
-                                    <AiOutlineEdit/>
-                                </EditBtn>
-                            </MarkerWrap>
+                            <Marker key={marker.id} marker={marker} toggleMarker={toggleMarker} isEnabled={isEnabled}/>
                         )
                     })
                 }
-                <Marker onClick={handleAddMarker}
+                <StyledMarker onClick={handleAddMarker}
                         color={'#fff'}
                         style={{
                             color: '#000',
@@ -108,7 +59,7 @@ const Markers = ({column, task}: IMarkersProps) => {
                             marginTop: '10px'
                         }}>
                     Добавить новую метку
-                </Marker>
+                </StyledMarker>
             </MarkersList>
         </>
     );

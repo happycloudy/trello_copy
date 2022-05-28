@@ -14,7 +14,7 @@ interface IMarkerTooltipProps {
 }
 
 
-const UserTooltip = ({column, task}: IMarkerTooltipProps) => {
+const MarkerTooltip = ({column, task}: IMarkerTooltipProps) => {
     const [active, setActive] = useState<boolean>(false)
     const [referenceElement, setReferenceElement] = useState<any>(null);
     const [popperElement, setPopperElement] = useState<any>(null);
@@ -50,4 +50,4 @@ const UserTooltip = ({column, task}: IMarkerTooltipProps) => {
     );
 };
 
-export default UserTooltip;
+export default MarkerTooltip;

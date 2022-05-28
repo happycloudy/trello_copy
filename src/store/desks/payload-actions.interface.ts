@@ -27,3 +27,16 @@ export interface IPayloadToggleMarker {
     column: IColumn,
     marker: IMarker,
 }
+
+export interface IPayloadSelectDate {
+    task: ITask,
+    column: IColumn,
+    date: string,
+}
+
+export interface IPayloadToggleDate {
+    task: ITask,
+    column: IColumn,
+    state: boolean,
+}
+

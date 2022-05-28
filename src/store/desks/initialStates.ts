@@ -19,5 +19,9 @@ export const initialStates: IInitialDeskStates = {
         markers: [],
         description: '',
         comments: [],
+        date: {
+            date: '',
+            completed: false
+        },
     })
 }

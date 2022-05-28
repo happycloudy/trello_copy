@@ -1,11 +1,13 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import deskReducer from './desks/desks.slice'
 import markersReducer from './markers/markers.slice'
+import userReducer from './user/user.slice'
 
 export const store = configureStore({
   reducer: {
     desks: deskReducer,
-    markers: markersReducer
+    markers: markersReducer,
+    user: userReducer
   },
 });
 

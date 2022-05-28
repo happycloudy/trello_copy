@@ -12,6 +12,7 @@ import Aside from "./Aside";
 import Description from "./Description";
 import Comments from "./Comments";
 import Markers from "./Markers";
+import DateComponent from "./DateComponent";
 
 interface ISettingsModalProps {
     active: boolean,
@@ -29,6 +30,17 @@ const Modal = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
+`
+const Wrap = styled.div`
+  display: flex;
+  width: 100%;
+  max-width: calc(100% - 15px);
+  gap: 15px;
+`
+const InfoWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-grow: 3;
 `
 const Title = styled(TextareaAutosize)`
   font-size: 20px;
@@ -88,28 +100,32 @@ const SettingsModal = ({active, handleClose, task, column}: ISettingsModalProps)
         active ?
             <ModalWrap>
                 <Modal ref={ref}>
-                    <CloseIcon onClick={handleClose}/>
-                    <div>
-                        <TextArea value={task.title} handleChange={handleChange} StyledTextArea={Title} wrapStyle={`
+                    <Wrap>
+                        <InfoWrap>
+                            <CloseIcon onClick={handleClose}/>
+                            <div>
+                                <TextArea value={task.title} handleChange={handleChange} StyledTextArea={Title} wrapStyle={`
                             width: 90%;
                         `}/>
-                        <TitleSmall>
-                            В колонке <UnderlineText>{column.title}</UnderlineText>
-                        </TitleSmall>
-                    </div>
-                    <Markers task={task} column={column} markers={task.markers}/>
-                    <ContentWrap>
-                        <TextWrap>
-                            <DescriptionWrap>
-                                <Description task={task}/>
-                            </DescriptionWrap>
-                            <CommentsWrap>
-                                <Comments/>
-                            </CommentsWrap>
-                        </TextWrap>
-
+                                <TitleSmall>
+                                    В колонке <UnderlineText>{column.title}</UnderlineText>
+                                </TitleSmall>
+                            </div>
+                            <Markers task={task} column={column} markers={task.markers}/>
+                            <DateComponent date={task.date} column={column} task={task}/>
+                            <ContentWrap>
+                                <TextWrap>
+                                    <DescriptionWrap>
+                                        <Description task={task}/>
+                                    </DescriptionWrap>
+                                    <CommentsWrap>
+                                        <Comments/>
+                                    </CommentsWrap>
+                                </TextWrap>
+                            </ContentWrap>
+                        </InfoWrap>
                         <Aside task={task} column={column}/>
-                    </ContentWrap>
+                    </Wrap>
                 </Modal>
             </ModalWrap> :
             <></>

@@ -1,5 +1,10 @@
 import {IMarker} from "../store/markers/markers.slice";
 
+export interface IDate {
+    date: string,
+    completed: boolean
+}
+
 export interface IComment {
     author?: string,
     text: string,
@@ -11,7 +16,8 @@ export interface ITask {
     title: string,
     markers: IMarker[],
     description: string,
-    comments: IComment[]
+    comments: IComment[],
+    date: IDate
 }
 
 export interface IColumn {

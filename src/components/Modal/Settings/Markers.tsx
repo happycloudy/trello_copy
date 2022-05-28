@@ -2,6 +2,7 @@ import React from 'react';
 import styled from "styled-components";
 import {IMarker} from "../../../store/markers/markers.slice";
 import {IColumn, ITask} from "../../../interfaces/desk.interface";
+import StyledSubtitle from "./Tooltips/Subtitle";
 
 interface IMarkersProps {
     markers: IMarker[],
@@ -17,7 +18,16 @@ const StyledMarkers = styled.div`
   display: flex;
   gap: 5px;
   flex-wrap: wrap;
-  max-width: 80%;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-left: 5px;
+  margin-top: 10px;
+`
+const StyledMarkersWrap = styled.div`
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  width: 100%;
 `
 const StyledMarker = styled.div<IStyledMarkerProps>`
   background: ${props => props.color};
@@ -28,17 +38,24 @@ const StyledMarker = styled.div<IStyledMarkerProps>`
   font-size: 14px;
 `
 
-const Markers = ({markers}: IMarkersProps ) => {
+const Markers = ({markers}: IMarkersProps) => {
     return (
-        <StyledMarkers>
-            {
-                markers.map(marker => (
-                    <StyledMarker color={marker.color} key={marker.id}>
-                        {marker.text}
-                    </StyledMarker>
-                ))
-            }
-        </StyledMarkers>
+        markers.length ?
+            <StyledMarkers>
+                <StyledSubtitle>
+                    Метки
+                </StyledSubtitle>
+                <StyledMarkersWrap>
+                    {
+                        markers.map(marker => (
+                            <StyledMarker color={marker.color} key={marker.id}>
+                                {marker.text}
+                            </StyledMarker>
+                        ))
+                    }
+                </StyledMarkersWrap>
+            </StyledMarkers> :
+            <></>
     );
 };
 

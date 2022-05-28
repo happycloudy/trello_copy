@@ -13,6 +13,10 @@ const TestColumns: IColumn[] = [
                 markers: [],
                 description: '',
                 comments: [],
+                date: {
+                    date: '',
+                    completed: false
+                },
             },
             {
                 author: [],
@@ -21,6 +25,10 @@ const TestColumns: IColumn[] = [
                 markers: [],
                 description: '',
                 comments: [],
+                date: {
+                    date: '',
+                    completed: false
+                },
             },
             {
                 author: [],
@@ -29,6 +37,10 @@ const TestColumns: IColumn[] = [
                 markers: [],
                 description: '',
                 comments: [],
+                date: {
+                    date: '',
+                    completed: false
+                },
             },
         ]
     },
@@ -49,6 +61,10 @@ const TestColumns: IColumn[] = [
                 ],
                 description: '',
                 comments: [],
+                date: {
+                    date: '',
+                    completed: false
+                },
             }
         ]
     },

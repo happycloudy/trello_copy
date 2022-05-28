@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import UsersTooltip from "./Tooltips/Users/UsersTooltip";
-import ListItem from "./Tooltips/ListItem";
 import {IColumn, ITask} from "../../../interfaces/desk.interface";
 import MarkerTooltip from "./Tooltips/Markers/MarkerTooltip";
+import DateTooltip from "./Tooltips/Date/DateTooltip";
 
 interface IAsideProps {
     task: ITask,
@@ -15,6 +15,8 @@ const AsideWrap = styled.aside`
   align-items: flex-start;
   flex-direction: column;
   gap: 10px;
+  flex-grow: 0.5;
+  margin-top: 30px;
 `
 const AsideTitle = styled.div`
   font-size: 12px;
@@ -39,9 +41,7 @@ const Aside = ({column, task}: IAsideProps) => {
             <AsideList>
                 <UsersTooltip task={task} column={column}/>
                 <MarkerTooltip task={task} column={column}/>
-                <ListItem>
-                    Даты
-                </ListItem>
+                <DateTooltip task={task} column={column}/>
             </AsideList>
         </AsideWrap>
     )
