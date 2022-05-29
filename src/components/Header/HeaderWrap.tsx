@@ -2,8 +2,9 @@ import styled from "styled-components";
 
 export const HeaderWrap = styled.header`
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
+  gap: 5vw;
   width: 100vw;
   color: #fff;
   background: hsl(311, 13.7%, 35.8%);

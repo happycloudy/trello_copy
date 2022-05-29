@@ -31,3 +31,8 @@ export interface IDesk {
     name: string,
     id: number,
 }
+
+export interface IWorkSpace {
+    name: string,
+    id: number,
+}

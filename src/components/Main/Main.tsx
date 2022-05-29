@@ -30,10 +30,15 @@ const List = styled.div`
 `
 
 const Main = () => {
-    const columns = useAppSelector(state => state.desks.current ? state.desks.current.columns : [])
+    const {columns, currentDesk} = useAppSelector(state => ({
+        columns: state.desks.current ? state.desks.current.columns : [],
+        currentDesk: state.desks.current
+    }))
     const dispatch = useAppDispatch()
 
     const handleCreate = () => dispatch(addColumn())
+
+
     return (
         <MainWrapper>
             <MainPicture src={'./assets/background.jpg'}/>
@@ -43,9 +48,14 @@ const Main = () => {
                         <Column column={column} key={column.id}/>
                     ))
                 }
-                <ColumnGhost onClick={handleCreate}>
-                    + Добавить еще одну колонку
-                </ColumnGhost>
+
+                {
+                    currentDesk ?
+                        <ColumnGhost onClick={handleCreate}>
+                            + Добавить еще одну колонку
+                        </ColumnGhost>:
+                        <></>
+                }
             </List>
         </MainWrapper>
     );

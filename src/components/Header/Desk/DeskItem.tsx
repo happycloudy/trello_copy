@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import styled from "styled-components";
 import {AiOutlineEdit} from "react-icons/ai";
-import {IDesk} from "../../interfaces/desk.interface";
-import {renameDesk} from "../../store/desks/desks.slice";
-import {useAppDispatch} from "../../store/hooks";
+import {IDesk, IWorkSpace} from "../../../interfaces/desk.interface";
+import {renameDesk} from "../../../store/desks/desks.slice";
+import {useAppDispatch} from "../../../store/hooks";
 import TextareaAutosize from "react-textarea-autosize";
 
 interface IDeskItemProps {
@@ -39,7 +39,9 @@ const DeskItem = ({desk, handleSelect}:IDeskItemProps) => {
     const [editable, setEditable] = useState(false)
     const dispatch = useAppDispatch()
 
-    const handleChange = (e: any, desk: IDesk) => dispatch(renameDesk({desk: desk, name: e.target.value}))
+    const handleChange = (e: any, desk: IDesk) => {
+        dispatch(renameDesk({desk: desk, name: e.target.value}))
+    }
     const toggleRenameDesk = () => setEditable(!editable)
     const handleSelectDesk = () => {
         if(!editable){

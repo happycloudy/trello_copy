@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import StyledWrap from "./StyledComponents/StyledWrap";
 import StyledForm from "./StyledComponents/StyledForm";
 import StyledFormTitle from "./StyledComponents/StyledFormTitle";
@@ -8,12 +8,22 @@ import StyledFormInput from "./StyledComponents/StyledFormInput";
 import StyledFormButton from "./StyledComponents/StyledFormButton";
 import StyledFormSmall from "./StyledComponents/StyledFormSmall";
 import {useForm} from "react-hook-form";
+import {useNavigate} from "react-router-dom";
+import {useAppSelector} from "../../store/hooks";
 
 const Login = () => {
+    const {auth} = useAppSelector(state => state.user.user)
     const {register, handleSubmit} = useForm()
+    const navigate = useNavigate()
 
     const onSubmit = handleSubmit(data => {
         console.log(data)
+    })
+
+    useEffect(() => {
+        if(auth){
+            navigate('/')
+        }
     })
 
     return (

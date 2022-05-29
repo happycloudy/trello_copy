@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import StyledWrap from "./StyledComponents/StyledWrap";
 import StyledForm from "./StyledComponents/StyledForm";
 import StyledFormSection from "./StyledComponents/StyledFormSection";
@@ -7,8 +7,22 @@ import StyledFormLabel from "./StyledComponents/StyledFormLabel";
 import StyledFormInput from "./StyledComponents/StyledFormInput";
 import StyledFormButton from "./StyledComponents/StyledFormButton";
 import StyledFormSmall from "./StyledComponents/StyledFormSmall";
+import {useAppSelector} from "../../store/hooks";
+import {useForm} from "react-hook-form";
+import {useNavigate} from "react-router-dom";
 
 const Register = () => {
+    const {auth} = useAppSelector(state => state.user.user)
+    const {register, handleSubmit} = useForm()
+    const navigate = useNavigate()
+
+
+    useEffect(() => {
+        if(auth){
+            navigate('/')
+        }
+    })
+
     return (
         <StyledWrap>
             <StyledForm>
@@ -21,12 +35,12 @@ const Register = () => {
                 <StyledFormSection>
                     <StyledFormLabel>
                         Почта
-                        <StyledFormInput/>
+                        <StyledFormInput type={'email'} {...register('emailAddress', {required: true})}/>
                     </StyledFormLabel>
 
                     <StyledFormLabel>
                         Логин
-                        <StyledFormInput/>
+                        <StyledFormInput type={'text'} {...register('login', {required: true})}/>
                     </StyledFormLabel>
 
                     <StyledFormLabel>

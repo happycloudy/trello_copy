@@ -10,7 +10,7 @@ interface IInitialState {
 const InitialState: IInitialState = {
     user: {
         access_token: '',
-        auth: false,
+        auth: true,
     },
     error: '',
     loading: false,
