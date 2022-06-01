@@ -40,7 +40,7 @@ const Header = () => {
             </Wrap>
 
             {
-                workspaces.workspaces.length && desks.desks.length ?
+                workspaces.workspaces.length && workspaces.current ?
                     <Wrap>
                         <TextBold>
                             Текущая доска:

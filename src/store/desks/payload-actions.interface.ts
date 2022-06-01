@@ -40,3 +40,10 @@ export interface IPayloadToggleDate {
     state: boolean,
 }
 
+export interface IPayloadMoveTask {
+    task: ITask,
+    from: IColumn,
+    to: IColumn,
+    id?: number,
+}
+

@@ -24,7 +24,6 @@ const ColumnTitle = styled(TextareaAutosize)`
   line-height: 20px;
   cursor: pointer;
 `
-
 const Tasks = styled.div`
   display: flex;
   margin-top: 10px;
@@ -32,7 +31,6 @@ const Tasks = styled.div`
   flex-direction: column;
   width: 100%;
 `
-
 const AddIcon = styled.div`
   display: inline;
   position: relative;
@@ -55,18 +53,21 @@ const AddIcon = styled.div`
 `
 
 
-const Column = ({column}: IColumnProps) => {
+const Column = ({column, dragStartHandler, dropHandler, dropColumnHandler}: IColumnProps) => {
     const dispatch = useAppDispatch()
 
     const handleChange = (e: any) => dispatch(renameColumn({column: column, title: e.target.value}))
     const handleCreateTask = () => dispatch(addTask({column: column}))
+    const dragOverHandler = (e: any) => {
+        e.preventDefault()
+    }
 
     return (
-        <ColumnWrap>
+        <ColumnWrap onDrop={(e:any) => dropColumnHandler(e, column)} onDragOver={dragOverHandler}>
             <TextArea value={column.title} handleChange={handleChange} StyledTextArea={ColumnTitle}/>
             <Tasks>
                 {column.tasks.map(task => (
-                    <Task key={task.id} column={column} task={task}/>
+                    <Task key={task.id} column={column} task={task} dragStartHandler={dragStartHandler} dropHandler={dropHandler}/>
                 ))}
                 <TaskGhost color={'#5e6c84'} onClick={handleCreateTask}>
                     <AddIcon/>Добавить карточку
