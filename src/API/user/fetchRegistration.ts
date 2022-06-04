@@ -7,7 +7,7 @@ const fetchRegistration = createAsyncThunk(
     'user/register',
     async (form: IRegister, thunkApi) => {
         try {
-            let res = await client.post('/registations')
+            let res = await client.post('/registations', form)
             console.log(res)
         } catch (e: any) {
             return thunkApi.rejectWithValue(e)
