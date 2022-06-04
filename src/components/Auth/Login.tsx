@@ -9,15 +9,18 @@ import StyledFormButton from "./StyledComponents/StyledFormButton";
 import StyledFormSmall from "./StyledComponents/StyledFormSmall";
 import {useForm} from "react-hook-form";
 import {useNavigate} from "react-router-dom";
-import {useAppSelector} from "../../store/hooks";
+import {useAppDispatch, useAppSelector} from "../../store/hooks";
+import fetchLogin from "../../API/user/fetchLogin";
+import {ILogin} from "./login.interface";
 
 const Login = () => {
     const {auth} = useAppSelector(state => state.user.user)
-    const {register, handleSubmit} = useForm()
+    const dispatch = useAppDispatch()
+    const {register, handleSubmit} = useForm<ILogin>()
     const navigate = useNavigate()
 
     const onSubmit = handleSubmit(data => {
-        console.log(data)
+        dispatch(fetchLogin(data))
     })
 
     useEffect(() => {
@@ -37,8 +40,8 @@ const Login = () => {
 
                 <StyledFormSection>
                     <StyledFormLabel>
-                        Почта
-                        <StyledFormInput type={'email'} {...register('emailAddress', {required: true})}/>
+                        Логин
+                        <StyledFormInput type={'text'} {...register('username', {required: true})}/>
                     </StyledFormLabel>
 
                     <StyledFormLabel>

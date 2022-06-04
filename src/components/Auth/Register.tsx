@@ -7,15 +7,22 @@ import StyledFormLabel from "./StyledComponents/StyledFormLabel";
 import StyledFormInput from "./StyledComponents/StyledFormInput";
 import StyledFormButton from "./StyledComponents/StyledFormButton";
 import StyledFormSmall from "./StyledComponents/StyledFormSmall";
-import {useAppSelector} from "../../store/hooks";
+import {useAppDispatch, useAppSelector} from "../../store/hooks";
 import {useForm} from "react-hook-form";
 import {useNavigate} from "react-router-dom";
+import fetchRegistration from "../../API/user/fetchRegistration";
+import {IRegister} from "./register.interface";
+
 
 const Register = () => {
     const {auth} = useAppSelector(state => state.user.user)
-    const {register, handleSubmit} = useForm()
+    const dispatch = useAppDispatch()
+    const {register, handleSubmit} = useForm<IRegister>()
     const navigate = useNavigate()
 
+    const onSubmit = handleSubmit(data => {
+        dispatch(fetchRegistration(data))
+    })
 
     useEffect(() => {
         if(auth){
@@ -25,7 +32,7 @@ const Register = () => {
 
     return (
         <StyledWrap>
-            <StyledForm>
+            <StyledForm onSubmit={onSubmit}>
                 <StyledFormSection>
                     <StyledFormTitle>
                         Регистрация
@@ -45,7 +52,7 @@ const Register = () => {
 
                     <StyledFormLabel>
                         Пароль
-                        <StyledFormInput type={'password'}/>
+                        <StyledFormInput type={'password'} {...register('password', {required: true})}/>
                     </StyledFormLabel>
                 </StyledFormSection>
 

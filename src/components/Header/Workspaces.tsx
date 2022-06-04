@@ -43,7 +43,7 @@ const Workspaces = () => {
                     }
                     <DeskListItem hoverDarkness={0.3} topDivider={'10px'}
                                   onClick={handleCreate}>
-                        + Добавить новую доску
+                        + Добавить новое рабочее пространство
                     </DeskListItem>
                 </SelectDesk>
             </Desk>
