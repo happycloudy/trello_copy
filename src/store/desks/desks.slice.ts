@@ -17,7 +17,7 @@ interface IInitialInterface {
 }
 
 const initialState: IInitialInterface = {
-    desks: TestDesks,
+    desks: [],
     current: undefined,
 }
 

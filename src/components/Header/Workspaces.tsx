@@ -6,7 +6,9 @@ import {useOnClickOutside} from "../../hooks";
 import TextBold from "./TextBold";
 import {useAppDispatch, useAppSelector} from "../../store/hooks";
 import WorkspaceItem from "./WorkspaceItem";
-import {createWorkspace, selectWorkspace} from "../../store/workspaces/workspace.slice";
+import {selectWorkspace} from "../../store/workspaces/workspace.slice";
+import createWorkspace from "../../API/workspaces/createWorkspace";
+import fetchDesks from "../../API/desks/fetchDesks";
 
 const Workspaces = () => {
     const ref = useRef(null)
@@ -17,9 +19,10 @@ const Workspaces = () => {
     const handleToggle = () => setActiveDeskList(!activeDeskList)
     const handleSelect = (workspace: IWorkSpace) => {
         dispatch(selectWorkspace(workspace))
+        dispatch(fetchDesks(0))
         setActiveDeskList(false)
     }
-    const handleCreate = () => dispatch(createWorkspace())
+    const handleCreate = () => dispatch(createWorkspace('Новое рабочее пространство'))
 
     useOnClickOutside(ref, () => setActiveDeskList(false))
 

@@ -1,16 +1,31 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Header from "./components/Header/Header";
 import Main from "./components/Main/Main";
-import {Route, Routes} from "react-router-dom";
+import {Route, Routes, useNavigate} from "react-router-dom";
 import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
-import {useAppSelector} from "./store/hooks";
+import {useAppDispatch, useAppSelector} from "./store/hooks";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
+import fetchInfo from "./API/user/fetchInfo";
 
 
 function App() {
+    const navigate = useNavigate()
     const {auth} = useAppSelector(state => state.user.user)
-    
+    const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        const token = localStorage.getItem('access_token')
+        if(token) {
+            dispatch(fetchInfo(token)).then(res => {
+                // @ts-ignore
+                if(res.payload.hasOwnProperty('user_id')){
+                    navigate('/')
+                }
+            })
+        }
+    }, [])
+
     return (
         <div>
             {

@@ -6,16 +6,15 @@ const fetchLogin = createAsyncThunk(
     'user/login',
     async (form: ILogin, thunkApi) => {
         try {
-            const loginRes = await client.post(`/token?username=${form.username}&password=${form.password}`)
-            const token = loginRes.data
-            console.log(token)
+            const loginRes = await client.post(`/token`, form)
+            const token = loginRes.data.access_token
             localStorage.setItem('access_token', token)
 
 
-            const infoRes = await client.post(`/sign_in`)
-            return infoRes.data
-        } catch (e) {
-            return thunkApi.rejectWithValue(e)
+            const infoRes = await client.get(`/sign_in`)
+            return {...infoRes.data, token: token}
+        } catch (e: any) {
+            return thunkApi.rejectWithValue(e.response.data.errorText)
         }
     }
 )

@@ -2,17 +2,20 @@ import {createAsyncThunk} from "@reduxjs/toolkit";
 import client from "../client";
 
 interface IEditWorkspacePayload {
-    id: number,
-    name: string,
+    id?: number,
     value: any,
+    path: string,
+    op: string,
 }
 
 
-const editWorkspace = createAsyncThunk(
-    'workspaces/edit',
+const renameWorkspace = createAsyncThunk(
+    'workspaces/rename',
     async (payload: IEditWorkspacePayload, thunkApi) => {
+        const id = payload.id
+        delete payload.id
         try {
-            let res = await client.post(`/workspaces/${payload.id}`)
+            let res = await client.patch(`/workspaces/${id}`, payload)
             console.log(res.data)
 
             if(res.status === 200) {
@@ -24,4 +27,4 @@ const editWorkspace = createAsyncThunk(
     }
 )
 
-export default editWorkspace
+export default renameWorkspace

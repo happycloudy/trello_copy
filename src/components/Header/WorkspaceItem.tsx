@@ -4,7 +4,7 @@ import {AiOutlineEdit} from "react-icons/ai";
 import {useAppDispatch} from "../../store/hooks";
 import TextareaAutosize from "react-textarea-autosize";
 import {IWorkSpace} from "../../interfaces/desk.interface";
-import {renameWorkspace} from "../../store/workspaces/workspace.slice";
+import renameWorkspace from "../../API/workspaces/renameWorkspace";
 
 interface IDeskItemProps {
     workspace: IWorkSpace,
@@ -28,46 +28,45 @@ const StyledDeskItem = styled(TextareaAutosize)`
   cursor: pointer;
   padding-left: 5px;
   color: ${({theme}) => theme.colors.font};
-  
+
   &:disabled {
     background: transparent;
   }
 `
 
-
-const DeskItem = ({workspace, handleSelect}:IDeskItemProps) => {
+const DeskItem = ({workspace, handleSelect}: IDeskItemProps) => {
     const [editable, setEditable] = useState(false)
     const dispatch = useAppDispatch()
 
     const handleChange = (e: any, desk: IWorkSpace) => {
-        dispatch(renameWorkspace({desk: desk, name: e.target.value}))
+        dispatch(renameWorkspace({value: e.target.value, id: desk.id, path: '/Name', op: 'add'}))
     }
     const toggleRenameDesk = () => setEditable(!editable)
     const handleSelectDesk = () => {
-        if(!editable){
+        if (!editable) {
             handleSelect()
         }
     }
-    const handleKeyEnter = (e: any) => {
+    const handleKeyEnter = (e: any, desk: IWorkSpace) => {
         if (e.keyCode === 13) {
             setEditable(false)
-            console.log('Новое название - ' + e.target.value)
+            dispatch(renameWorkspace({value: e.target.value, id: desk.id, path: '/Name', op: 'add'}))
         }
     }
     const handleBlur = () => setEditable(false)
 
 
     return (
-       <>
-           <Wrap onClick={handleSelectDesk}>
-               <StyledDeskItem value={workspace.name}
-                               onChange={(e:any) => handleChange(e, workspace)}
-                               onKeyDown={handleKeyEnter}
-                               disabled={!editable}
-                               onBlur={handleBlur}/>
-           </Wrap>
-           <AiOutlineEdit style={{marginLeft: '10px'}} onClick={toggleRenameDesk}/>
-       </>
+        <>
+            <Wrap onClick={handleSelectDesk}>
+                <StyledDeskItem value={workspace.name}
+                                onChange={(e: any) => handleChange(e, workspace)}
+                                onKeyDown={(e: any) => handleKeyEnter(e, workspace)}
+                                disabled={!editable}
+                                onBlur={handleBlur}/>
+            </Wrap>
+            <AiOutlineEdit style={{marginLeft: '10px'}} onClick={toggleRenameDesk}/>
+        </>
     );
 };
 

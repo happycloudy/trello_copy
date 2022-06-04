@@ -12,21 +12,22 @@ import {useNavigate} from "react-router-dom";
 import {useAppDispatch, useAppSelector} from "../../store/hooks";
 import fetchLogin from "../../API/user/fetchLogin";
 import {ILogin} from "./login.interface";
+import StyledFormError from "./StyledComponents/StyledFormError";
 
 const Login = () => {
-    const {auth} = useAppSelector(state => state.user.user)
+    const {error} = useAppSelector(state => ({
+        error: state.user.error
+    }))
     const dispatch = useAppDispatch()
     const {register, handleSubmit} = useForm<ILogin>()
     const navigate = useNavigate()
 
     const onSubmit = handleSubmit(data => {
-        dispatch(fetchLogin(data))
-    })
-
-    useEffect(() => {
-        if(auth){
-            navigate('/')
-        }
+        dispatch(fetchLogin(data)).then(res => {
+            if(res.payload.hasOwnProperty('user_id')){
+                navigate('/')
+            }
+        })
     })
 
     return (
@@ -51,6 +52,13 @@ const Login = () => {
                 </StyledFormSection>
 
                 <StyledFormSection>
+                    {
+                        error.length?
+                            <StyledFormError>
+                                {error}
+                            </StyledFormError>:
+                            <></>
+                    }
                     <StyledFormButton>
                         Войти
                     </StyledFormButton>

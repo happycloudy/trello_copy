@@ -1,10 +1,11 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from "styled-components";
 import {useAppDispatch, useAppSelector} from "../../store/hooks";
 import Column from "../Column/Column";
 import {ColumnGhost} from "../Column/ColumnGhost";
 import {addColumn, moveTask} from "../../store/desks/desks.slice";
 import {IColumn, ITask} from "../../interfaces/desk.interface";
+import fetchWorkspaces from "../../API/workspaces/fetchWorkspaces";
 
 interface IDragConfig {
     task: ITask | undefined,
@@ -47,11 +48,9 @@ const Main = () => {
 
 
     const handleCreate = () => dispatch(addColumn())
-
     const dragStartHandler = (e: any, column: IColumn, task: ITask) => {
         setDragConfig({task: task, from: column})
     }
-
     const dropHandler = (e: any, column: IColumn, task: ITask) => {
         e.preventDefault()
 
@@ -67,7 +66,6 @@ const Main = () => {
         }
         e.target.style.boxShadow = 'none'
     }
-
     const dropColumnHandler = (e:any, column: IColumn) => {
         if (column !== undefined && dragConfig.from !== undefined && dragConfig.task !== undefined) {
             // @ts-ignore
@@ -79,6 +77,9 @@ const Main = () => {
         e.target.style.boxShadow = 'none'
     }
 
+    useEffect(() => {
+        dispatch(fetchWorkspaces(0))
+    }, [])
 
     return (
         <MainWrapper>

@@ -1,11 +1,11 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import client from "../client";
 
-const createWorkspace = createAsyncThunk(
-    'workspaces/create',
-    async (name: string, thunkApi) => {
+const fetchDesks = createAsyncThunk(
+    'workspaces/fetch',
+    async (_: any, thunkApi) => {
         try {
-            let res = await client.post(`/workspaces`, {name: name})
+            let res = await client.get(`/workspaces`)
 
             if(res.status === 200) {
                 return res.data
@@ -16,4 +16,4 @@ const createWorkspace = createAsyncThunk(
     }
 )
 
-export default createWorkspace
+export default fetchDesks
