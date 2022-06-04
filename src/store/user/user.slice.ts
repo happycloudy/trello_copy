@@ -11,7 +11,6 @@ interface IInitialState {
 
 const InitialState: IInitialState = {
     user: {
-        access_token: '',
         auth: false,
         display_name: '',
         user_id: 0,

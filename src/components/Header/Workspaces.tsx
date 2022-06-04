@@ -9,6 +9,7 @@ import WorkspaceItem from "./WorkspaceItem";
 import {selectWorkspace} from "../../store/workspaces/workspace.slice";
 import createWorkspace from "../../API/workspaces/createWorkspace";
 import fetchDesks from "../../API/desks/fetchDesks";
+import {loadDesks} from "../../store/desks/desks.slice";
 
 const Workspaces = () => {
     const ref = useRef(null)
@@ -19,7 +20,7 @@ const Workspaces = () => {
     const handleToggle = () => setActiveDeskList(!activeDeskList)
     const handleSelect = (workspace: IWorkSpace) => {
         dispatch(selectWorkspace(workspace))
-        dispatch(fetchDesks(0))
+        dispatch(loadDesks(workspace.desks))
         setActiveDeskList(false)
     }
     const handleCreate = () => dispatch(createWorkspace('Новое рабочее пространство'))

@@ -1,4 +1,5 @@
 import {IMarker} from "../store/markers/markers.slice";
+import {IUser} from "./user.interface";
 
 export interface IDate {
     date: string,
@@ -30,9 +31,12 @@ export interface IDesk {
     columns: IColumn[],
     name: string,
     id: number,
+    users: IUser[],
+    workspaceId: number
 }
 
 export interface IWorkSpace {
     name: string,
     id: number,
+    desks: any,
 }

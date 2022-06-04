@@ -5,11 +5,12 @@ import SelectDesk, {DeskListItem} from "./Desk/DeskList";
 import {useOnClickOutside} from "../../hooks";
 import styled from "styled-components";
 import {useAppDispatch, useAppSelector} from "../../store/hooks";
-import {createDesk, selectDesk} from "../../store/desks/desks.slice";
+import {selectDesk} from "../../store/desks/desks.slice";
 import {IDesk} from "../../interfaces/desk.interface";
 import DeskItem from "./Desk/DeskItem";
 import Workspaces from "./Workspaces";
 import TextBold from "./TextBold";
+import createDesk from "../../API/desks/createDesk";
 
 const Wrap = styled.div`
   display: flex;
@@ -20,7 +21,11 @@ const Wrap = styled.div`
 const Header = () => {
     const [activeDeskList, setActiveDeskList] = useState(false)
     const ref = useRef<any>(null)
-    const {desks, workspaces} = useAppSelector(state => ({desks: {...state.desks}, workspaces: {...state.workspaces}}))
+    const {desks, workspaces, user} = useAppSelector(state => ({
+        desks: {...state.desks},
+        workspaces: {...state.workspaces},
+        user: {...state.user.user}
+    }))
     const dispatch = useAppDispatch()
 
     const handleToggle = () => setActiveDeskList(!activeDeskList)
@@ -28,7 +33,13 @@ const Header = () => {
         dispatch(selectDesk(desk))
         setActiveDeskList(false)
     }
-    const handleCreate = () => dispatch(createDesk())
+    const handleCreate = () => {
+        dispatch(createDesk({
+            owner_Id: user.user_id,
+            workspace_id: workspaces.current!.id,
+            board_name: 'Новая доска',
+        }))
+    }
 
     useOnClickOutside(ref, () => setActiveDeskList(false))
 

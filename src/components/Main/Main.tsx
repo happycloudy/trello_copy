@@ -3,9 +3,10 @@ import styled from "styled-components";
 import {useAppDispatch, useAppSelector} from "../../store/hooks";
 import Column from "../Column/Column";
 import {ColumnGhost} from "../Column/ColumnGhost";
-import {addColumn, moveTask} from "../../store/desks/desks.slice";
+import {moveTask} from "../../store/desks/desks.slice";
 import {IColumn, ITask} from "../../interfaces/desk.interface";
 import fetchWorkspaces from "../../API/workspaces/fetchWorkspaces";
+import createColumn from "../../API/columns/createColumn";
 
 interface IDragConfig {
     task: ITask | undefined,
@@ -47,7 +48,7 @@ const Main = () => {
     const dispatch = useAppDispatch()
 
 
-    const handleCreate = () => dispatch(addColumn())
+    const handleCreate = () => dispatch(createColumn({name: 'Новая колонка', boards_id: currentDesk!.id}))
     const dragStartHandler = (e: any, column: IColumn, task: ITask) => {
         setDragConfig({task: task, from: column})
     }
@@ -76,6 +77,8 @@ const Main = () => {
         }
         e.target.style.boxShadow = 'none'
     }
+
+
 
     useEffect(() => {
         dispatch(fetchWorkspaces(0))
