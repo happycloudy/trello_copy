@@ -1,8 +1,8 @@
 export interface IUser {
     auth: boolean,
-    display_name: string
-    email_address: string
-    global_role: string
-    login: string
-    user_id: number
+    displayName: string,
+    id: number,
+    emailAddress: string,
+    globalRole: string,
+    login: string,
 }

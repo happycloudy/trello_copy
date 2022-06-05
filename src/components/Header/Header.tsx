@@ -5,12 +5,12 @@ import SelectDesk, {DeskListItem} from "./Desk/DeskList";
 import {useOnClickOutside} from "../../hooks";
 import styled from "styled-components";
 import {useAppDispatch, useAppSelector} from "../../store/hooks";
-import {selectDesk} from "../../store/desks/desks.slice";
 import {IDesk} from "../../interfaces/desk.interface";
 import DeskItem from "./Desk/DeskItem";
 import Workspaces from "./Workspaces";
 import TextBold from "./TextBold";
 import createDesk from "../../API/desks/createDesk";
+import getDeskData from "../../API/desks/getDeskData";
 
 const Wrap = styled.div`
   display: flex;
@@ -30,12 +30,12 @@ const Header = () => {
 
     const handleToggle = () => setActiveDeskList(!activeDeskList)
     const handleSelect = (desk: IDesk) => {
-        dispatch(selectDesk(desk))
+        dispatch(getDeskData(desk.id))
         setActiveDeskList(false)
     }
     const handleCreate = () => {
         dispatch(createDesk({
-            owner_Id: user.user_id,
+            owner_Id: user.id,
             workspace_id: workspaces.current!.id,
             board_name: 'Новая доска',
         }))

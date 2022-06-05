@@ -1,5 +1,5 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {IColumn, IDesk} from "../../interfaces/desk.interface";
+import {IDesk} from "../../interfaces/desk.interface";
 import {
     IPayloadMoveTask,
     IPayloadRemoveTask,
@@ -7,9 +7,17 @@ import {
     IPayloadRenameDesk,
     IPayloadRenameTask, IPayloadSelectDate, IPayloadToggleDate, IPayloadToggleMarker
 } from "./payload-actions.interface";
-import {initialStates} from "./initialStates";
-import {IUser} from "../../interfaces/user.interface";
 import createColumn from "../../API/columns/createColumn";
+import getWorkspaceData from "../../API/workspaces/getWorkspaceData";
+import createDesk from "../../API/desks/createDesk";
+import createTask from "../../API/tasks/createTask";
+import renameDesk from "../../API/desks/renameDesk";
+import renameColumn from "../../API/columns/renameColumn";
+import renameTask from "../../API/tasks/renameTask";
+import getDeskData from "../../API/desks/getDeskData";
+import deleteTask from "../../API/tasks/deleteTask";
+import deleteColumn from "../../API/columns/deleteColumn";
+import deleteDesk from "../../API/desks/deleteDesk";
 
 interface IInitialInterface {
     desks: IDesk[],
@@ -25,10 +33,6 @@ const desksSlice = createSlice({
     name: 'desks',
     initialState: initialState,
     reducers: {
-        selectDesk: (state, action: PayloadAction<IDesk>) => {
-            if (state.current && (state.current.id === action.payload.id)) return
-            state.current = action.payload
-        },
         selectDate: (state, action: PayloadAction<IPayloadSelectDate>) => {
             const column = action.payload.column
             const task = action.payload.task
@@ -47,54 +51,6 @@ const desksSlice = createSlice({
                 users: item.Users,
                 workspaceId: item.WorkspaceId
             }))
-        },
-
-        renameDesk: (state, action: PayloadAction<IPayloadRenameDesk>) => {
-            let deskIndex = 0
-            state.desks.forEach((desk, index) => {
-                if (desk.id === action.payload.desk.id) {
-                    deskIndex = index
-                }
-            })
-
-            state.desks[deskIndex].name = action.payload.name
-        },
-        renameColumn: (state, action: PayloadAction<IPayloadRenameColumn>) => {
-            let columnIndex = 0
-            state.current!.columns.forEach((column, index) => {
-                if (column.id === action.payload.column.id) {
-                    columnIndex = index
-                }
-            })
-
-            state.current!.columns[columnIndex].title = action.payload.title
-        },
-        renameTask: (state, action: PayloadAction<IPayloadRenameTask>) => {
-            let columnIndex = 0
-            state.current!.columns.forEach((column, index) => {
-                if (column.id === action.payload.column.id) {
-                    columnIndex = index
-                }
-            })
-
-            let taskIndex = 0
-            state.current!.columns[columnIndex].tasks.forEach((task, index) => {
-                if (task.id === action.payload.task.id) {
-                    taskIndex = index
-                }
-            })
-            state.current!.columns[columnIndex].tasks[taskIndex].title = action.payload.title
-        },
-
-        addTask: (state, action) => {
-            let columnIndex = 0
-            state.current!.columns.forEach((column, index) => {
-                if (column.id === action.payload.column.id) {
-                    columnIndex = index
-                }
-            })
-
-            state.current!.columns[columnIndex].tasks.push(initialStates.task())
         },
 
         removeTask: (state, action: PayloadAction<IPayloadRemoveTask>) => {
@@ -158,25 +114,124 @@ const desksSlice = createSlice({
         },
     },
     extraReducers: {
+        [getWorkspaceData.fulfilled.type]: (state, action) => {
+            state.desks = action.payload.Boards.map((item: any) => ({
+                name: item.BoardName,
+                columns: item.Columns.map((item: any) => ({
+                    deskId: item.BoardsId,
+                    tasks: item.Cards.map((card: any) => ({
+                        id: card.Id,
+                        columnId: card.ColumnId,
+                        description: card.Description,
+                        date: {
+                            date: card.Timer
+                        },
+                        markers: [],
+                        comments: [],
+                    })),
+                    id: item.Id,
+                    title: item.Name
+                })),
+                id: item.Id,
+                users: item.Users,
+                workspaceId: item.WorkspaceId
+            }))
+            state.current = undefined
+        },
+        [getDeskData.fulfilled.type]: (state, action) => {
+            state.current = {
+                name: action.payload.BoardName,
+                columns: action.payload.Columns.map((item: any) => ({
+                    deskId: item.BoardsId,
+                    tasks: item.Cards.map((card: any) => ({
+                        id: card.Id,
+                        columnId: card.ColumnId,
+                        description: card.Description,
+                        date: {
+                            date: card.Timer
+                        },
+                        markers: [],
+                        title: card.Name,
+                        comments: [],
+                    })),
+                    id: item.Id,
+                    title: item.Name
+                })),
+                id: action.payload.Id,
+                users: action.payload.Users,
+                workspaceId: action.payload.WorkspaceId
+            }
+        },
+
         [createColumn.fulfilled.type]: (state, action) => {
-            state.current!.columns.push(initialStates.column())
-        }
+            state.current!.columns.push({
+                tasks: [],
+                title: action.payload.Name,
+                id: action.payload.Id,
+            })
+        },
+        [createDesk.fulfilled.type]: (state, action) => {
+            state.desks.push({
+                name: action.payload.BoardName,
+                columns: action.payload.Columns,
+                id: action.payload.Id,
+                users: action.payload.Users,
+                workspaceId: action.payload.WorkspaceId
+            })
+        },
+        [createTask.fulfilled.type]: (state, action) => {
+            const column = state.current!.columns.find(column => column.id === action.payload.ColumnId)
+            // @ts-ignore
+            column!.tasks.push({
+                id: action.payload.Id,
+                columnId: action.payload.ColumnId,
+                description: action.payload.Description,
+                date: {
+                    date: action.payload.Timer,
+                    completed: false,
+                },
+                title: action.payload.Name,
+                markers: [],
+                comments: [],
+            })
+        },
+
+        [renameDesk.fulfilled.type]: (state, action: PayloadAction<IPayloadRenameDesk>) => {
+            const desk = state.desks.find(desk => desk.id === action.payload.id)
+            desk!.name = action.payload.name
+        },
+        [renameColumn.fulfilled.type]: (state, action: PayloadAction<IPayloadRenameDesk>) => {
+            const column = state.current!.columns.find(column => column.id === action.payload.id)
+            column!.title = action.payload.name
+
+        },
+        [renameTask.fulfilled.type]: (state, action: PayloadAction<IPayloadRenameTask>) => {
+            const column = state.current!.columns.find(column => column.id === action.payload.columnId)
+            const task = column!.tasks.find(task => task.id === action.payload.taskId)
+            console.log(action.payload.name)
+            task!.title = action.payload.name
+        },
+
+        [deleteTask.fulfilled.type]: (state,action) => {
+            const column = state.current!.columns.find(column => column.id === action.payload.columnId)
+            column!.tasks = column!.tasks.filter(task => task.id !== column!.id)
+        },
+        [deleteColumn.fulfilled.type]: (state,action) => {
+            state.current!.columns = state.current!.columns.filter(column => column.id !== action.payload.id)
+        },
+        [deleteDesk.fulfilled.type]: (state,action) => {
+            state.desks = state.desks.filter(desk => desk.id !== action.payload.id)
+        },
     },
 })
 
 
 export const {
-    selectDesk,
-    renameColumn,
-    renameTask,
-    addTask,
     removeTask,
-    renameDesk,
     toggleMarker,
     selectDate,
     toggleDate,
     moveTask,
-    loadDesks
 } = desksSlice.actions
 
 export default desksSlice.reducer

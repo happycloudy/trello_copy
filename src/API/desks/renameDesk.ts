@@ -10,15 +10,15 @@ interface IEditWorkspacePayload {
 
 
 const renameWorkspace = createAsyncThunk(
-    'workspaces/rename',
+    'desks/rename',
     async (payload: IEditWorkspacePayload, thunkApi) => {
         const id = payload.id
         delete payload.id
         try {
-            let res = await client.patch(`/workspaces/${id}`, [payload])
+            let res = await client.patch(`/boards/${id}`, [payload])
 
-            if (res.status === 200) {
-                return {name: res.data.Name, id: id}
+            if(res.status === 200) {
+                return {name : res.data.board_name, id: id}
             }
         } catch (e) {
             return thunkApi.rejectWithValue(e)

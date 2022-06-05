@@ -12,10 +12,10 @@ interface IInitialState {
 const InitialState: IInitialState = {
     user: {
         auth: false,
-        display_name: '',
-        user_id: 0,
-        email_address: '',
-        global_role: '',
+        displayName: '',
+        id: 0,
+        emailAddress: '',
+        globalRole: '',
         login: '',
     },
     error: '',

@@ -19,7 +19,7 @@ function App() {
         if(token) {
             dispatch(fetchInfo(token)).then(res => {
                 // @ts-ignore
-                if(res.payload.hasOwnProperty('user_id')){
+                if(res.payload.hasOwnProperty('Id')){
                     navigate('/')
                 }
             })

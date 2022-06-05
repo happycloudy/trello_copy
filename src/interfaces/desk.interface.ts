@@ -13,6 +13,7 @@ export interface IComment {
 
 export interface ITask {
     author: string[],
+    columnId: number,
     id: number,
     title: string,
     markers: IMarker[],
@@ -25,6 +26,7 @@ export interface IColumn {
     title: string,
     id: number,
     tasks: ITask[],
+    deskId?: number,
 }
 
 export interface IDesk {
@@ -38,5 +40,6 @@ export interface IDesk {
 export interface IWorkSpace {
     name: string,
     id: number,
-    desks: any,
+    desks?: any,
+    users?: any,
 }

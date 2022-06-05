@@ -10,4 +10,5 @@ export const ColumnWrap = styled.div`
   border-radius: 5px;
   min-width: 300px;
   height: max-content;
+  position: relative;
 `

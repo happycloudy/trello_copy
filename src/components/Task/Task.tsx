@@ -4,7 +4,7 @@ import {IColumn, ITask} from "../../interfaces/desk.interface";
 import SettingsModal from "../Modal/Settings/SettingsModal";
 import {FiTrash} from "react-icons/fi/index";
 import {useAppDispatch} from "../../store/hooks";
-import {moveTask, removeTask} from "../../store/desks/desks.slice";
+import deleteTask from "../../API/tasks/deleteTask";
 
 interface ITaskProps {
     task: ITask,
@@ -17,6 +17,9 @@ interface ITaskProps {
 interface ITaskWrapProps {
     highlighted?: boolean
 }
+interface ITaskMarkerProps {
+    bg: string,
+}
 
 const TaskWrap = styled.div<ITaskWrapProps>`
   padding: 5px 5px;
@@ -25,8 +28,10 @@ const TaskWrap = styled.div<ITaskWrapProps>`
   transition: 0.2s;
   cursor: pointer;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 5px;
   overflow-wrap: break-word;
   word-wrap: break-word;
   word-break: break-word;
@@ -45,16 +50,31 @@ const TaskWrap = styled.div<ITaskWrapProps>`
     display: block;
   }
 `
+const TaskContent = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+`
+const TaskMarkers = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+`
+const TaskMarker = styled.span<ITaskMarkerProps>`
+  width: 40px;
+  height: 8px;
+  border-radius: 4px;
+  background: ${props => props.bg};
+`
 
 const Task = ({task, column, dragStartHandler, dropHandler}: ITaskProps) => {
-
     const [activeSettings, setActiveSettings] = useState(false)
     const dispatch = useAppDispatch()
 
-
     const handleOpenSettings = () => setActiveSettings(true)
     const handleCloseSettings = () => setActiveSettings(false)
-    const handleRemove = () => dispatch(removeTask({task: task, column: column}))
+    const handleRemove = () => dispatch(deleteTask({taskId: task.id, columnId: column.id}))
 
     const dragOverHandler = (e: any) => {
         e.preventDefault()
@@ -79,10 +99,19 @@ const Task = ({task, column, dragStartHandler, dropHandler}: ITaskProps) => {
                       onDragEnd={(e) => dragEndHandler(e)}
                       onDrop={(e) => dropHandler(e, column, task)}
                       onClick={handleOpenSettings}>
-                {task.title}
-                <div style={{minWidth: '16px'}}>
-                    <FiTrash onClick={handleRemove}/>
-                </div>
+                <TaskMarkers>
+                    {
+                        task.markers.map(marker => (
+                            <TaskMarker bg={marker.color} key={marker.id}/>
+                        ))
+                    }
+                </TaskMarkers>
+                <TaskContent>
+                    {task.title}
+                    <div style={{minWidth: '16px'}}>
+                        <FiTrash onClick={handleRemove}/>
+                    </div>
+                </TaskContent>
             </TaskWrap>
         </>
     );

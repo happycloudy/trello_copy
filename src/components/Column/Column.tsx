@@ -5,9 +5,12 @@ import styled from "styled-components";
 import Task from "../Task/Task";
 import TextArea from "../TextArea/TextArea";
 import {useAppDispatch} from "../../store/hooks";
-import {addTask, renameColumn} from "../../store/desks/desks.slice";
 import {TaskGhost} from "../Task/TaskGhost";
 import TextareaAutosize from "react-textarea-autosize";
+import createTask from "../../API/tasks/createTask";
+import renameColumn from "../../API/columns/renameColumn";
+import {FiTrash} from "react-icons/fi";
+import deleteColumn from "../../API/columns/deleteColumn";
 
 
 const ColumnTitle = styled(TextareaAutosize)`
@@ -51,13 +54,21 @@ const AddIcon = styled.div`
     transform: rotate(90deg);
   }
 `
+const DeleteIconWrap = styled.div`
+  position: absolute;
+  min-width: 16px;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+`
 
 
 const Column = ({column, dragStartHandler, dropHandler, dropColumnHandler}: IColumnProps) => {
     const dispatch = useAppDispatch()
 
-    const handleChange = (e: any) => dispatch(renameColumn({column: column, title: e.target.value}))
-    const handleCreateTask = () => dispatch(addTask({column: column}))
+    const handleRemove = () => dispatch(deleteColumn(column.id))
+    const handleChange = (e: any) => dispatch(renameColumn({value: e.target.value, id: column.id, path: 'Name', op: 'add'}))
+    const handleCreateTask = () => dispatch(createTask({column_id: column.id, name: 'Новая карточка'}))
     const dragOverHandler = (e: any) => {
         e.preventDefault()
     }
@@ -65,6 +76,9 @@ const Column = ({column, dragStartHandler, dropHandler, dropColumnHandler}: ICol
     return (
         <ColumnWrap onDrop={(e:any) => dropColumnHandler(e, column)} onDragOver={dragOverHandler}>
             <TextArea value={column.title} handleChange={handleChange} StyledTextArea={ColumnTitle}/>
+            <DeleteIconWrap >
+                <FiTrash onClick={handleRemove}/>
+            </DeleteIconWrap>
             <Tasks>
                 {column.tasks.map(task => (
                     <Task key={task.id} column={column} task={task} dragStartHandler={dragStartHandler} dropHandler={dropHandler}/>

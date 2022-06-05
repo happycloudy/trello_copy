@@ -17,6 +17,7 @@ export const initialStates: IInitialDeskStates = {
         author: [],
         id: randomId(),
         markers: [],
+        columnId: 0,
         description: '',
         comments: [],
         date: {

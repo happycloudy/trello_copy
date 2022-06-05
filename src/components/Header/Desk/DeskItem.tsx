@@ -1,10 +1,12 @@
 import React, {useState} from 'react';
 import styled from "styled-components";
 import {AiOutlineEdit} from "react-icons/ai";
-import {IDesk, IWorkSpace} from "../../../interfaces/desk.interface";
-import {renameDesk} from "../../../store/desks/desks.slice";
+import {IDesk} from "../../../interfaces/desk.interface";
 import {useAppDispatch} from "../../../store/hooks";
 import TextareaAutosize from "react-textarea-autosize";
+import renameDesk from "../../../API/desks/renameDesk";
+import {FiTrash} from "react-icons/fi";
+import deleteDesk from "../../../API/desks/deleteDesk";
 
 interface IDeskItemProps {
     desk: IDesk,
@@ -17,7 +19,6 @@ const Wrap = styled.div`
   justify-content: space-between;
   align-items: center;
 `
-
 const StyledDeskItem = styled(TextareaAutosize)`
   resize: none;
   border: none;
@@ -33,6 +34,13 @@ const StyledDeskItem = styled(TextareaAutosize)`
     background: transparent;
   }
 `
+const SettingsWrap = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  height: 25px;
+`
 
 
 const DeskItem = ({desk, handleSelect}:IDeskItemProps) => {
@@ -40,7 +48,7 @@ const DeskItem = ({desk, handleSelect}:IDeskItemProps) => {
     const dispatch = useAppDispatch()
 
     const handleChange = (e: any, desk: IDesk) => {
-        dispatch(renameDesk({desk: desk, name: e.target.value}))
+        dispatch(renameDesk({value: e.target.value, id: desk.id, path: 'board_name', op: 'add'}))
     }
     const toggleRenameDesk = () => setEditable(!editable)
     const handleSelectDesk = () => {
@@ -51,10 +59,11 @@ const DeskItem = ({desk, handleSelect}:IDeskItemProps) => {
     const handleKeyEnter = (e: any) => {
         if (e.keyCode === 13) {
             setEditable(false)
-            console.log('Новое название - ' + e.target.value)
+            renameDesk({value: e.target.value, id: desk.id, path: 'board_name', op: 'add'})
         }
     }
     const handleBlur = () => setEditable(false)
+    const handleRemove = () => dispatch(deleteDesk(desk.id))
 
 
     return (
@@ -66,7 +75,10 @@ const DeskItem = ({desk, handleSelect}:IDeskItemProps) => {
                                disabled={!editable}
                                onBlur={handleBlur}/>
            </Wrap>
-           <AiOutlineEdit style={{marginLeft: '10px'}} onClick={toggleRenameDesk}/>
+           <SettingsWrap>
+               <AiOutlineEdit style={{marginLeft: '10px'}} onClick={toggleRenameDesk}/>
+               <FiTrash onClick={handleRemove}/>
+           </SettingsWrap>
        </>
     );
 };

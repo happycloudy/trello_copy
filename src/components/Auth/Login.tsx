@@ -24,7 +24,7 @@ const Login = () => {
 
     const onSubmit = handleSubmit(data => {
         dispatch(fetchLogin(data)).then(res => {
-            if(res.payload.hasOwnProperty('user_id')){
+            if(res.payload.hasOwnProperty('Id')){
                 navigate('/')
             }
         })

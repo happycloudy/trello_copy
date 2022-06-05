@@ -6,13 +6,13 @@ import {IColumn, ITask} from "../../../interfaces/desk.interface";
 import TextArea from "../../TextArea/TextArea";
 import TextareaAutosize from 'react-textarea-autosize';
 import {useAppDispatch} from "../../../store/hooks";
-import {renameTask} from "../../../store/desks/desks.slice";
 import {CloseIcon} from "../../Icons/CloseIcon";
 import Aside from "./Aside";
 import Description from "./Description";
 import Comments from "./Comments";
 import Markers from "./Markers";
 import DateComponent from "./DateComponent";
+import renameTask from "../../../API/tasks/renameTask";
 
 interface ISettingsModalProps {
     active: boolean,
@@ -91,7 +91,7 @@ const SettingsModal = ({active, handleClose, task, column}: ISettingsModalProps)
     const ref = useRef(null)
     const dispatch = useAppDispatch()
 
-    const handleChange = (e: any) => dispatch(renameTask({column: column, task: task, title: e.target.value}))
+    const handleChange = (e: any) => dispatch(renameTask({value: e.target.value, id: task.id, path: 'name', op: 'add'}))
     useOnClickOutside(ref, () => {
         handleClose()
     })

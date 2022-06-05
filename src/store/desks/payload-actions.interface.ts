@@ -1,8 +1,8 @@
-import {IColumn, IDesk, ITask} from "../../interfaces/desk.interface";
+import {IColumn, ITask} from "../../interfaces/desk.interface";
 import {IMarker} from "../markers/markers.slice";
 
 export interface IPayloadRenameDesk {
-    desk: IDesk,
+    id: number,
     name: string,
 }
 
@@ -12,9 +12,9 @@ export interface IPayloadRenameColumn {
 }
 
 export interface IPayloadRenameTask {
-    column: IColumn,
-    task: ITask
-    title: string
+    columnId: number,
+    taskId: number
+    name: string
 }
 
 export interface IPayloadRemoveTask {
