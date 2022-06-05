@@ -3,10 +3,10 @@ import styled from "styled-components";
 import {useAppDispatch, useAppSelector} from "../../store/hooks";
 import Column from "../Column/Column";
 import {ColumnGhost} from "../Column/ColumnGhost";
-import {moveTask} from "../../store/desks/desks.slice";
 import {IColumn, ITask} from "../../interfaces/desk.interface";
 import fetchWorkspaces from "../../API/workspaces/fetchWorkspaces";
 import createColumn from "../../API/columns/createColumn";
+import moveTask from '../../API/tasks/moveTask'
 
 interface IDragConfig {
     task: ITask | undefined,
@@ -59,9 +59,18 @@ const Main = () => {
             if(dragConfig.task !== task){
                 // @ts-ignore
                 dispatch(moveTask({
-                    ...dragConfig,
-                    to: column,
-                    id: task.id
+                    payload: {
+                        op: 'add',
+                        path: 'column_id',
+                        value: column.id,
+                        id: dragConfig.task.id,
+                    },
+                    data: {
+                        task: dragConfig.task,
+                        from: dragConfig.from,
+                        to: column,
+                        id: task.id
+                    }
                 }))
             }
         }
@@ -71,13 +80,21 @@ const Main = () => {
         if (column !== undefined && dragConfig.from !== undefined && dragConfig.task !== undefined) {
             // @ts-ignore
             dispatch(moveTask({
-                ...dragConfig,
-                to: column,
+                payload: {
+                    op: 'add',
+                    path: 'column_id',
+                    value: column.id,
+                    id: dragConfig.task.id,
+                },
+                data: {
+                    task: dragConfig.task,
+                    from: dragConfig.from,
+                    to: column,
+                }
             }))
         }
         e.target.style.boxShadow = 'none'
     }
-
 
 
     useEffect(() => {

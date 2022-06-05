@@ -6,6 +6,7 @@ const TooltipTitle = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
+  color: #000;
 `
 
 export default TooltipTitle

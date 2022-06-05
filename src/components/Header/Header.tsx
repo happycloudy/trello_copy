@@ -11,6 +11,7 @@ import Workspaces from "./Workspaces";
 import TextBold from "./TextBold";
 import createDesk from "../../API/desks/createDesk";
 import getDeskData from "../../API/desks/getDeskData";
+import Invite from "./Invite/Invite";
 
 const Wrap = styled.div`
   display: flex;
@@ -77,6 +78,8 @@ const Header = () => {
                     </Wrap> :
                     <></>
             }
+
+            <Invite/>
         </HeaderWrap>
     );
 };

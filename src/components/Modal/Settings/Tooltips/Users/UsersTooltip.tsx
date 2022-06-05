@@ -23,7 +23,7 @@ const UsersTooltip = ({column, task}: IUserTooltipProps) => {
         popperElement,
         {modifiers: [{name: 'offset', options: {offset: [0, 10]},}]}
     );
-
+    const handleAdd = (id: number) => {}
     const toggleActive = () => setActive(!active)
     useOnClickOutside(areaRef, () => setActive(false))
 
@@ -41,7 +41,7 @@ const UsersTooltip = ({column, task}: IUserTooltipProps) => {
                             Участники
                         </TooltipTitle>
                         <UserInput/>
-                        <Users/>
+                        <Users handleAdd={handleAdd}/>
                     </TooltipWrap>
                 </div>
             }
