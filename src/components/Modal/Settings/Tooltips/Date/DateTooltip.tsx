@@ -9,8 +9,8 @@ import {useOnClickOutside} from "../../../../../hooks";
 import TooltipWrap from "../TooltipWrap";
 import TooltipTitle from "../TooltipTitle";
 import {useAppDispatch} from "../../../../../store/hooks";
-import {selectDate} from "../../../../../store/desks/desks.slice";
 import BlueButton from "../../../../Button/BlueButton";
+import addDate from "../../../../../API/desks/addDate";
 
 interface IDateTooltipProps {
     task: ITask,
@@ -53,11 +53,11 @@ const DateTooltip = ({column, task}: IDateTooltipProps) => {
     const toggleActive = () => setActive(!active)
     const handleChange = (e: any) => setDate(e)
     const handleSubmit = () => {
-        dispatch(selectDate({column: column, task: task, date: date.toISOString()}))
+        dispatch(addDate({columnId: column.id, taskId: task.id, date: date.toISOString()}))
         setActive(false)
     }
     const handleClear = () => {
-        dispatch(selectDate({column: column, task: task, date: ''}))
+        dispatch(addDate({columnId: column.id, taskId: task.id, date: null}))
         setActive(false)
     }
     const handleClose = () => {

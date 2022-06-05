@@ -1,11 +1,13 @@
 import React from 'react';
 import styled from "styled-components";
 import {useAppDispatch, useAppSelector} from "../../../../../store/hooks";
-import {addMarker, IMarker} from "../../../../../store/markers/markers.slice";
-import {toggleMarker as toggleTaskMarker} from "../../../../../store/desks/desks.slice";
+import {IMarker} from "../../../../../store/markers/markers.slice";
 import {IColumn, ITask} from "../../../../../interfaces/desk.interface";
 import Marker from "./Marker";
 import StyledMarker from "./StyledMarker";
+import addMarkerToTask from "../../../../../API/tasks/addMarkerToTask";
+import removeMarkerFromTask from "../../../../../API/tasks/removeMarkerFromTask";
+import addMarker from "../../../../../API/markers/addMarker";
 
 interface IMarkersProps {
     column: IColumn,
@@ -30,11 +32,21 @@ const MarkersList = styled.ul`
 
 
 const Markers = ({column, task}: IMarkersProps) => {
-    const {markers} = useAppSelector(state => state.markers)
+    const {markers, current} = useAppSelector(state => ({
+        markers: state.markers.markers,
+        current: state.desks.current
+    }))
     const dispatch = useAppDispatch()
 
-    const toggleMarker = (marker: IMarker) => dispatch(toggleTaskMarker({marker: marker, task: task, column: column}))
-    const handleAddMarker = () => dispatch(addMarker())
+    const toggleMarker = (marker: IMarker) => {
+        const isHaveMarker = task.markers.find(taskMarker => taskMarker.id === marker.id)
+        if(isHaveMarker) {
+            dispatch(removeMarkerFromTask({marker: marker, taskId: task.id, columnId: column.id}))
+        } else {
+            dispatch(addMarkerToTask({marker: marker, taskId: task.id, columnId: column.id}))
+        }
+    }
+    const handleAddMarker = () => dispatch(addMarker(current!.id))
 
 
     return (

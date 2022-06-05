@@ -3,6 +3,7 @@ import styled from "styled-components";
 import {useAppDispatch, useAppSelector} from "../../../../../store/hooks";
 import getUsers from "../../../../../API/user/getUsers";
 import {MdDownloadDone} from "react-icons/md/index";
+import {IUser} from "../../../../../interfaces/user.interface";
 
 const StyledTitle = styled.div`
   width: 100%;
@@ -33,18 +34,13 @@ const StyledItem = styled.li`
 
 interface IUsersProps {
     handleAdd: (id: number) => void,
+    users?: IUser[],
 }
 
-const Users = ({handleAdd}: IUsersProps) => {
-    const {users, current} = useAppSelector(state => ({
-        users: state.user.users,
+const Users = ({users, handleAdd}: IUsersProps) => {
+    const {current} = useAppSelector(state => ({
         current: state.desks.current,
     }))
-    const dispatch = useAppDispatch()
-
-    useEffect(() => {
-        dispatch(getUsers())
-    }, [])
 
     return (
         <>
@@ -53,7 +49,7 @@ const Users = ({handleAdd}: IUsersProps) => {
             </StyledTitle>
             <StyledList>
                 {
-                    users.map(user => {
+                    users ? users.map(user => {
                         const deskUser = !!current!.users.find(deskUser => deskUser.id === user.id)
 
                         return (
@@ -62,7 +58,7 @@ const Users = ({handleAdd}: IUsersProps) => {
                                 {deskUser ? <MdDownloadDone/> : <></>}
                             </StyledItem>
                         )
-                    })
+                    }): <></>
                 }
             </StyledList>
         </>

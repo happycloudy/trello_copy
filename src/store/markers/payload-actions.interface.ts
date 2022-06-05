@@ -1,7 +1,5 @@
-import {IMarker} from "./markers.slice";
-
 export interface IPayloadEditMarker {
-    marker: IMarker,
+    markerId: number,
     text: string,
     color: string,
 }

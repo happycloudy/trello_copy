@@ -12,11 +12,21 @@ import TextBold from "./TextBold";
 import createDesk from "../../API/desks/createDesk";
 import getDeskData from "../../API/desks/getDeskData";
 import Invite from "./Invite/Invite";
+import {BiExit} from "react-icons/bi/index";
+import {logout} from "../../store/user/user.slice";
 
 const Wrap = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`
+const Exit = styled(BiExit)`
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  height: 25px;
+  width: 25px;
+  cursor: pointer;
 `
 
 const Header = () => {
@@ -40,6 +50,9 @@ const Header = () => {
             workspace_id: workspaces.current!.id,
             board_name: 'Новая доска',
         }))
+    }
+    const handleExit = () => {
+      dispatch(logout())
     }
 
     useOnClickOutside(ref, () => setActiveDeskList(false))
@@ -80,6 +93,7 @@ const Header = () => {
             }
 
             <Invite/>
+            <Exit onClick={handleExit}/>
         </HeaderWrap>
     );
 };

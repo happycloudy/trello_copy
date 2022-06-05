@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {usePopper} from "react-popper";
 import ListItem from "../ListItem";
 import TooltipWrap from "../TooltipWrap";
@@ -6,7 +6,8 @@ import TooltipTitle from "../TooltipTitle";
 import UserInput from "./UserInput";
 import Users from "./Users";
 import {IColumn, ITask} from "../../../../../interfaces/desk.interface";
-import {useOnClickOutside} from "../../../../../hooks";
+import {useDebounce, useOnClickOutside} from "../../../../../hooks";
+import fetchUsers from "../../../../../API/user/fetchUsers";
 
 interface IUserTooltipProps {
     task: ITask,
@@ -23,9 +24,33 @@ const UsersTooltip = ({column, task}: IUserTooltipProps) => {
         popperElement,
         {modifiers: [{name: 'offset', options: {offset: [0, 10]},}]}
     );
+
+
+
+    const [value, setValue] = useState('')
+    const [loading, setLoading] = useState(false)
+    const [users, setUsers] = useState([])
+    const debouncedValue: string = useDebounce<string>(value, 500);
     const handleAdd = (id: number) => {}
     const toggleActive = () => setActive(!active)
     useOnClickOutside(areaRef, () => setActive(false))
+
+
+    useEffect(
+        () => {
+            if (debouncedValue) {
+                console.log(debouncedValue)
+                setLoading(true);
+                fetchUsers(debouncedValue).then((results: any) => {
+                    setLoading(false);
+                    setUsers(results);
+                });
+            } else {
+                setUsers([]);
+            }
+        },
+        [debouncedValue]
+    );
 
     return (
         <>
@@ -40,7 +65,7 @@ const UsersTooltip = ({column, task}: IUserTooltipProps) => {
                         <TooltipTitle>
                             Участники
                         </TooltipTitle>
-                        <UserInput/>
+                        <UserInput value={value} handleChange={(e:any) => setValue(e.target.value)}/>
                         <Users handleAdd={handleAdd}/>
                     </TooltipWrap>
                 </div>

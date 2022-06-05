@@ -1,12 +1,14 @@
 import React, {useState} from 'react';
-import {editMarker, IMarker} from "../../../../../store/markers/markers.slice";
+import {IMarker} from "../../../../../store/markers/markers.slice";
 import styled from "styled-components";
-import {useAppDispatch} from "../../../../../store/hooks";
+import {useAppDispatch, useAppSelector} from "../../../../../store/hooks";
+import editMarker from "../../../../../API/markers/editMarker";
 
 interface IEditMarkerProps {
     marker: IMarker,
     handleClose: () => void,
 }
+
 interface IStyledButtonProps {
     color?: string
 }
@@ -24,7 +26,7 @@ const StyledButton = styled.button<IStyledButtonProps>`
   border: 2px solid ${(props) => props.color || '#3498db'};
   cursor: pointer;
   transition: 0.3s;
-  
+
   &:hover {
     box-shadow: 0 0 5px 2px ${(props) => props.color || '#3498db'};
   }
@@ -41,21 +43,27 @@ const StyledEditMarker = styled.div`
 
 
 const EditMarkerField = ({marker, handleClose}: IEditMarkerProps) => {
+    const {current} = useAppSelector(state => state.desks)
     const [text, setText] = useState(marker.text)
     const [color, setColor] = useState(marker.color)
     const dispatch = useAppDispatch()
 
 
     const handleSubmit = () => {
-        dispatch(editMarker({marker: marker, text: text, color: color}))
+        dispatch(editMarker({
+            deskId: current!.id,
+            markerId: marker.id,
+            text: text,
+            color: color,
+        }))
         handleClose()
     }
 
 
     return (
         <StyledEditMarker>
-            <StyledInput type={'text'} value={text} onChange={(e:any) => setText(e.target.value)}/>
-            <StyledInput type={'color'} value={color} onChange={(e:any) => setColor(e.target.value)}/>
+            <StyledInput type={'text'} value={text} onChange={(e: any) => setText(e.target.value)}/>
+            <StyledInput type={'color'} value={color} onChange={(e: any) => setColor(e.target.value)}/>
             <StyledButton color={color} onClick={handleSubmit}>
                 Сохранить изменения
             </StyledButton>

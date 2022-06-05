@@ -19,6 +19,10 @@ import deleteTask from "../../API/tasks/deleteTask";
 import deleteColumn from "../../API/columns/deleteColumn";
 import deleteDesk from "../../API/desks/deleteDesk";
 import moveTask from "../../API/tasks/moveTask";
+import addMarkerToTask from "../../API/tasks/addMarkerToTask";
+import removeMarkerFromTask from "../../API/tasks/removeMarkerFromTask";
+import addDate from "../../API/desks/addDate";
+import completeDate from "../../API/desks/completeDate";
 
 interface IInitialInterface {
     desks: IDesk[],
@@ -34,14 +38,6 @@ const desksSlice = createSlice({
     name: 'desks',
     initialState: initialState,
     reducers: {
-        selectDate: (state, action: PayloadAction<IPayloadSelectDate>) => {
-            const column = action.payload.column
-            const task = action.payload.task
-            const date = action.payload.date
-            const currentColumn = state.current!.columns.find(columnArrItem => columnArrItem.id === column.id)
-            const currentTask = currentColumn!.tasks.find(taskArrItem => taskArrItem.id === task.id)
-            currentTask!.date.date = date
-        },
         loadDesks: (state, action) => {
             console.log(action.payload)
             state.desks = action.payload.map((item: any) => ({
@@ -87,14 +83,6 @@ const desksSlice = createSlice({
                 state.current!.columns[columnIndex].tasks[taskIndex].markers.push(action.payload.marker)
             }
         },
-        toggleDate: (state, action: PayloadAction<IPayloadToggleDate>) => {
-            const column = action.payload.column
-            const task = action.payload.task
-            const checked = action.payload.state
-            const currentColumn = state.current!.columns.find(columnArrItem => columnArrItem.id === column.id)
-            const currentTask = currentColumn!.tasks.find(taskArrItem => taskArrItem.id === task.id)
-            currentTask!.date.completed = checked
-        },
     },
     extraReducers: {
         [getWorkspaceData.fulfilled.type]: (state, action) => {
@@ -109,7 +97,7 @@ const desksSlice = createSlice({
                         date: {
                             date: card.Timer
                         },
-                        markers: [],
+                        markers: card.ColorStampRelationCards,
                         comments: [],
                     })),
                     id: item.Id,
@@ -131,9 +119,10 @@ const desksSlice = createSlice({
                         columnId: card.ColumnId,
                         description: card.Description,
                         date: {
-                            date: card.Timer
+                            date: card.Timer,
+                            completed: card.Completed
                         },
-                        markers: [],
+                        markers: card.ColorStampRelationCards,
                         title: card.Name,
                         comments: [],
                     })),
@@ -209,7 +198,6 @@ const desksSlice = createSlice({
             state.desks = state.desks.filter(desk => desk.id !== action.payload.id)
         },
 
-
         [moveTask.fulfilled.type]: (state, action: PayloadAction<IPayloadMoveTask>) => {
             const from = state.current!.columns.find(column => column.id === action.payload.from.id)
             const to = state.current!.columns.find(column => column.id === action.payload.to.id)
@@ -224,6 +212,29 @@ const desksSlice = createSlice({
                 to!.tasks.push(action.payload.task)
             }
         },
+
+        [addMarkerToTask.fulfilled.type]: (state, action) => {
+            const column = state.current!.columns.find(column => column.id === action.payload.columnId)
+            const task = column!.tasks.find(task => task.id === action.payload.taskId)
+            // @ts-ignore
+            task!.markers.push({id: action.payload.marker.id})
+        },
+        [removeMarkerFromTask.fulfilled.type]: (state, action) => {
+            const column = state.current!.columns.find(column => column.id === action.payload.columnId)
+            const task = column!.tasks.find(task => task.id === action.payload.taskId)
+            task!.markers = task!.markers.filter(marker => marker.id !== action.payload.marker.id)
+        },
+
+        [addDate.fulfilled.type]: (state, action) => {
+            const currentColumn = state.current!.columns.find(columnArrItem => columnArrItem.id === action.payload.columnId)
+            const currentTask = currentColumn!.tasks.find(taskArrItem => taskArrItem.id === action.payload.taskId)
+            currentTask!.date.date = action.payload.date
+        },
+        [completeDate.fulfilled.type]: (state, action) => {
+            const currentColumn = state.current!.columns.find(columnArrItem => columnArrItem.id === action.payload.columnId)
+            const currentTask = currentColumn!.tasks.find(taskArrItem => taskArrItem.id === action.payload.taskId)
+            currentTask!.date.completed = action.payload.completed
+        },
     },
 })
 
@@ -231,8 +242,6 @@ const desksSlice = createSlice({
 export const {
     removeTask,
     toggleMarker,
-    selectDate,
-    toggleDate,
 } = desksSlice.actions
 
 export default desksSlice.reducer

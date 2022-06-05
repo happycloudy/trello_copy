@@ -3,7 +3,7 @@ import styled from "styled-components";
 import {IColumn, ITask} from "../../interfaces/desk.interface";
 import SettingsModal from "../Modal/Settings/SettingsModal";
 import {FiTrash} from "react-icons/fi/index";
-import {useAppDispatch} from "../../store/hooks";
+import {useAppDispatch, useAppSelector} from "../../store/hooks";
 import deleteTask from "../../API/tasks/deleteTask";
 
 interface ITaskProps {
@@ -69,6 +69,7 @@ const TaskMarker = styled.span<ITaskMarkerProps>`
 `
 
 const Task = ({task, column, dragStartHandler, dropHandler}: ITaskProps) => {
+    const {markers} = useAppSelector(state => state.markers)
     const [activeSettings, setActiveSettings] = useState(false)
     const dispatch = useAppDispatch()
 
@@ -101,9 +102,12 @@ const Task = ({task, column, dragStartHandler, dropHandler}: ITaskProps) => {
                       onClick={handleOpenSettings}>
                 <TaskMarkers>
                     {
-                        task.markers.map(marker => (
-                            <TaskMarker bg={marker.color} key={marker.id}/>
-                        ))
+                        task.markers.map(taskMarker => {
+                            const marker = markers.find(marker => marker.id === taskMarker.id)
+                            return (
+                                <TaskMarker bg={marker!.color} key={marker!.id}/>
+                            )
+                        })
                     }
                 </TaskMarkers>
                 <TaskContent>

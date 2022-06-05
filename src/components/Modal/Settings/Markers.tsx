@@ -47,11 +47,14 @@ const Markers = ({markers}: IMarkersProps) => {
                 </StyledSubtitle>
                 <StyledMarkersWrap>
                     {
-                        markers.map(marker => (
-                            <StyledMarker color={marker.color} key={marker.id}>
-                                {marker.text}
-                            </StyledMarker>
-                        ))
+                        markers.map(taskMarker => {
+                            const marker = markers.find(marker => marker.id === taskMarker.id)
+                            return (
+                                <StyledMarker color={marker!.color} key={marker!.id}>
+                                    {marker!.text}
+                                </StyledMarker>
+                            )
+                        })
                     }
                 </StyledMarkersWrap>
             </StyledMarkers> :

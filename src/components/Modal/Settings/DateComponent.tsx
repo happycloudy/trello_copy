@@ -2,8 +2,8 @@ import React from 'react';
 import styled from "styled-components";
 import StyledSubtitle from "./Tooltips/Subtitle";
 import {useAppDispatch} from "../../../store/hooks";
-import {toggleDate} from "../../../store/desks/desks.slice";
 import {IColumn, IDate, ITask} from "../../../interfaces/desk.interface";
+import completeDate from "../../../API/desks/completeDate";
 
 interface IDateProps {
     date: IDate,
@@ -42,7 +42,7 @@ const CompletedDate = styled.div`
 const DateComponent = ({date, column, task}: IDateProps) => {
     const dispatch = useAppDispatch()
 
-    const handleToggle = (e: any) => dispatch(toggleDate({column: column, task: task, state: e.target.checked}))
+    const handleToggle = (e: any) => dispatch(completeDate({columnId: column.id, taskId: task.id, completed: e.target.checked}))
     return (
         date.date ?
             <StyledDateWrap>

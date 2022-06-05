@@ -1,8 +1,8 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import InviteWrap from "./InviteWrap";
 import BlueButton from "../../Button/BlueButton";
 import {usePopper} from "react-popper";
-import {useOnClickOutside} from "../../../hooks";
+import {useDebounce, useOnClickOutside} from "../../../hooks";
 import TooltipWrap from "../../Modal/Settings/Tooltips/TooltipWrap";
 import TooltipTitle from "../../Modal/Settings/Tooltips/TooltipTitle";
 import UserInput from "../../Modal/Settings/Tooltips/Users/UserInput";
@@ -10,9 +10,9 @@ import Users from "../../Modal/Settings/Tooltips/Users/Users";
 import {useAppDispatch, useAppSelector} from "../../../store/hooks";
 import addUserToDesk from "../../../API/user/addUserToDesk";
 import getDeskData from "../../../API/desks/getDeskData";
+import fetchUsers from "../../../API/user/fetchUsers";
 
 const Invite = () => {
-    const {current} = useAppSelector(state => state.desks)
     const [active, setActive] = useState<boolean>(false)
     const [referenceElement, setReferenceElement] = useState<any>(null);
     const [popperElement, setPopperElement] = useState<any>(null);
@@ -22,6 +22,14 @@ const Invite = () => {
         popperElement,
         {modifiers: [{name: 'offset', options: {offset: [0, 10]},}]}
     );
+
+
+
+    const [value, setValue] = useState('')
+    const [loading, setLoading] = useState(false)
+    const [users, setUsers] = useState([])
+    const debouncedValue: string = useDebounce<string>(value, 500);
+    const {current} = useAppSelector(state => state.desks)
     const dispatch = useAppDispatch()
 
     const toggleActive = () => setActive(!active)
@@ -32,6 +40,24 @@ const Invite = () => {
         }
     })
     useOnClickOutside(areaRef, () => setActive(false))
+
+    useEffect(
+        () => {
+            if (debouncedValue) {
+                console.log(debouncedValue)
+                setLoading(true);
+                fetchUsers(debouncedValue).then((results: any) => {
+                    setLoading(false);
+                    console.log(results)
+                    setUsers(results);
+                });
+            } else {
+                setUsers([]);
+            }
+        },
+        [debouncedValue]
+    );
+
 
     return (
         <InviteWrap>
@@ -50,8 +76,8 @@ const Invite = () => {
                         <TooltipTitle>
                             Участники
                         </TooltipTitle>
-                        <UserInput/>
-                        <Users handleAdd={handleAdd}/>
+                        <UserInput value={value} handleChange={(e:any) => setValue(e.target.value)}/>
+                        <Users users={users} handleAdd={handleAdd}/>
                     </TooltipWrap>
                 </div>
             }

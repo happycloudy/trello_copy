@@ -28,7 +28,12 @@ const InitialState: IInitialState = {
 const userSlice = createSlice({
     name: 'user',
     initialState: InitialState,
-    reducers: {},
+    reducers: {
+        logout: (state) => {
+            localStorage.removeItem('access_token')
+            state.user = InitialState.user
+        }
+    },
     extraReducers: {
         [fetchLogin.fulfilled.type]: (state, action: PayloadAction<any>) => {
             state.loading = false
@@ -78,5 +83,7 @@ const userSlice = createSlice({
         },
     }
 })
+
+export const {logout} = userSlice.actions
 
 export default userSlice.reducer

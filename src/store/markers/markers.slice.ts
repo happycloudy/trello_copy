@@ -1,7 +1,9 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {InitialMarkers} from "./initial.markers";
-import {initialStates} from "./initialStates";
 import {IPayloadEditMarker} from "./payload-actions.interface";
+import getDeskData from "../../API/desks/getDeskData";
+import editMarker from "../../API/markers/editMarker";
+import addMarker from "../../API/markers/addMarker";
 
 export interface IMarker {
     text: string,
@@ -14,30 +16,36 @@ interface IInitialInterface {
 }
 
 const initialState: IInitialInterface = {
-  markers: InitialMarkers
+    markers: InitialMarkers
 }
 
 const markersSlice = createSlice({
     name: 'markers',
     initialState: initialState,
     reducers: {
-        addMarker: (state) => {
-            state.markers.push(initialStates.marker())
+    },
+    extraReducers: {
+        [getDeskData.fulfilled.type]: (state, action) => {
+            state.markers = action.payload.ColorStamps.map((item: any) => ({
+                id: item.id,
+                text: item.name,
+                color: item.value
+            }))
         },
-        editMarker: (state,action: PayloadAction<IPayloadEditMarker>) => {
-            const marker = action.payload.marker
+        [editMarker.fulfilled.type]: (state, action: PayloadAction<IPayloadEditMarker>) => {
+            const markerId = action.payload.markerId
             const text = action.payload.text
             const color = action.payload.color
 
-            const currentMarker = state.markers.find(arrayMarker => arrayMarker.id === marker.id)
+            const currentMarker = state.markers.find(arrayMarker => arrayMarker.id === markerId)
             currentMarker!.text = text
             currentMarker!.color = color
+        },
+        [addMarker.fulfilled.type]: (state, action) => {
+
         }
     },
-    extraReducers: {},
 })
 
-
-export const {addMarker, editMarker} = markersSlice.actions
 
 export default markersSlice.reducer

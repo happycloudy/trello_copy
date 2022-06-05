@@ -1,5 +1,10 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import styled from "styled-components";
+
+interface IUserInput {
+    value: string,
+    handleChange: (e:any) => void
+}
 
 const StyledInput = styled.input`
   padding: 10px;
@@ -8,9 +13,9 @@ const StyledInput = styled.input`
   margin-top: 15px;
 `
 
-const UserInput = () => {
+const UserInput = ({value, handleChange}: IUserInput) => {
     return (
-        <StyledInput placeholder={'Добавить участника...'}/>
+        <StyledInput value={value} onChange={handleChange} placeholder={'Добавить участника...'}/>
     );
 };
 
