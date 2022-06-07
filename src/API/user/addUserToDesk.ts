@@ -2,7 +2,7 @@ import {createAsyncThunk} from "@reduxjs/toolkit";
 import client from "../client";
 
 const addUserToDesk = createAsyncThunk(
-    'desks/create',
+    'desks/addUser',
     async ({deskId, userId}: {deskId: number, userId: number}, thunkApi) => {
         try {
             let res = await client.post(`/boards/${deskId}/add_user/${userId}`)

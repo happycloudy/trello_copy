@@ -44,11 +44,9 @@ const Invite = () => {
     useEffect(
         () => {
             if (debouncedValue) {
-                console.log(debouncedValue)
                 setLoading(true);
                 fetchUsers(debouncedValue).then((results: any) => {
                     setLoading(false);
-                    console.log(results)
                     setUsers(results);
                 });
             } else {

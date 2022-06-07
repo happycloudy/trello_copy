@@ -23,15 +23,19 @@ import addMarkerToTask from "../../API/tasks/addMarkerToTask";
 import removeMarkerFromTask from "../../API/tasks/removeMarkerFromTask";
 import addDate from "../../API/desks/addDate";
 import completeDate from "../../API/desks/completeDate";
+import saveDescription from "../../API/tasks/saveDescription";
+import addComment from "../../API/tasks/addComment";
 
 interface IInitialInterface {
     desks: IDesk[],
     current: IDesk | undefined,
+    loading: boolean
 }
 
 const initialState: IInitialInterface = {
     desks: [],
     current: undefined,
+    loading: false,
 }
 
 const desksSlice = createSlice({
@@ -86,6 +90,7 @@ const desksSlice = createSlice({
     },
     extraReducers: {
         [getWorkspaceData.fulfilled.type]: (state, action) => {
+            state.loading = false
             state.desks = action.payload.Boards.map((item: any) => ({
                 name: item.BoardName,
                 columns: item.Columns.map((item: any) => ({
@@ -98,7 +103,11 @@ const desksSlice = createSlice({
                             date: card.Timer
                         },
                         markers: card.ColorStampRelationCards,
-                        comments: [],
+                        comments: card.Comment.map((item: any) => ({
+                            author: '',
+                            authorId: item.AuthorId,
+                            text: item.Comment
+                        })),
                     })),
                     id: item.Id,
                     title: item.Name
@@ -109,7 +118,12 @@ const desksSlice = createSlice({
             }))
             state.current = undefined
         },
+        [getWorkspaceData.pending.type]: (state) => {
+            state.loading = true
+        },
+
         [getDeskData.fulfilled.type]: (state, action) => {
+            state.loading = false
             state.current = {
                 name: action.payload.BoardName,
                 columns: action.payload.Columns.map((item: any) => ({
@@ -124,7 +138,11 @@ const desksSlice = createSlice({
                         },
                         markers: card.ColorStampRelationCards,
                         title: card.Name,
-                        comments: [],
+                        comments: card.Comment.map((item: any) => ({
+                            author: '',
+                            authorId: item.AuthorId,
+                            text: item.Comment
+                        })),
                     })),
                     id: item.Id,
                     title: item.Name
@@ -138,6 +156,9 @@ const desksSlice = createSlice({
                 })),
                 workspaceId: action.payload.WorkspaceId
             }
+        },
+        [getDeskData.pending.type]: (state) => {
+            state.loading = true
         },
 
         [createColumn.fulfilled.type]: (state, action) => {
@@ -176,6 +197,9 @@ const desksSlice = createSlice({
         [renameDesk.fulfilled.type]: (state, action: PayloadAction<IPayloadRenameDesk>) => {
             const desk = state.desks.find(desk => desk.id === action.payload.id)
             desk!.name = action.payload.name
+            if(state.current && state.current.id && state.current.id === action.payload.id){
+                state.current.name = action.payload.name
+            }
         },
         [renameColumn.fulfilled.type]: (state, action: PayloadAction<IPayloadRenameDesk>) => {
             const column = state.current!.columns.find(column => column.id === action.payload.id)
@@ -234,6 +258,23 @@ const desksSlice = createSlice({
             const currentColumn = state.current!.columns.find(columnArrItem => columnArrItem.id === action.payload.columnId)
             const currentTask = currentColumn!.tasks.find(taskArrItem => taskArrItem.id === action.payload.taskId)
             currentTask!.date.completed = action.payload.completed
+        },
+
+        [saveDescription.fulfilled.type]: (state,action) => {
+            const currentColumn = state.current!.columns.find(columnArrItem => columnArrItem.id === action.payload.columnId)
+            const currentTask = currentColumn!.tasks.find(taskArrItem => taskArrItem.id === action.payload.taskId)
+
+            currentTask!.description = action.payload.description
+        },
+
+        [addComment.fulfilled.type]: (state,action) => {
+            const currentColumn = state.current!.columns.find(columnArrItem => columnArrItem.id === action.payload.columnId)
+            const currentTask = currentColumn!.tasks.find(taskArrItem => taskArrItem.id === action.payload.taskId)
+            currentTask!.comments.push({
+                author: '',
+                authorId: action.payload.comment.AuthorId,
+                text: action.payload.comment.Comment
+            })
         },
     },
 })

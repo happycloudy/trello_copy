@@ -49,7 +49,7 @@ const AddIcon = styled.div`
     top: 50%;
     background: #5e6c84;
   }
-  
+
   &::after {
     transform: rotate(90deg);
   }
@@ -67,21 +67,22 @@ const Column = ({column, dragStartHandler, dropHandler, dropColumnHandler}: ICol
     const dispatch = useAppDispatch()
 
     const handleRemove = () => dispatch(deleteColumn(column.id))
-    const handleChange = (e: any) => dispatch(renameColumn({value: e.target.value, id: column.id, path: 'Name', op: 'add'}))
+    const handleChange = (value: any) => dispatch(renameColumn({value: value, id: column.id, path: 'Name', op: 'add'}))
     const handleCreateTask = () => dispatch(createTask({column_id: column.id, name: 'Новая карточка'}))
     const dragOverHandler = (e: any) => {
         e.preventDefault()
     }
 
     return (
-        <ColumnWrap onDrop={(e:any) => dropColumnHandler(e, column)} onDragOver={dragOverHandler}>
+        <ColumnWrap onDrop={(e: any) => dropColumnHandler(e, column)} onDragOver={dragOverHandler}>
             <TextArea value={column.title} handleChange={handleChange} StyledTextArea={ColumnTitle}/>
-            <DeleteIconWrap >
+            <DeleteIconWrap>
                 <FiTrash onClick={handleRemove}/>
             </DeleteIconWrap>
             <Tasks>
                 {column.tasks.map(task => (
-                    <Task key={task.id} column={column} task={task} dragStartHandler={dragStartHandler} dropHandler={dropHandler}/>
+                    <Task key={task.id} column={column} task={task} dragStartHandler={dragStartHandler}
+                          dropHandler={dropHandler}/>
                 ))}
                 <TaskGhost color={'#5e6c84'} onClick={handleCreateTask}>
                     <AddIcon/>Добавить карточку

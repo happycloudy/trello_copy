@@ -9,6 +9,7 @@ export interface IDate {
 export interface IComment {
     author?: string,
     text: string,
+    authorId: number,
 }
 
 export interface ITask {

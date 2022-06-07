@@ -1,9 +1,10 @@
 import React, {useEffect, useRef, useState} from 'react';
 import styled, {StyledComponent} from "styled-components";
+import {useDebounce} from "../../hooks";
 
 interface ITextAreaProps {
     value: string,
-    handleChange: (e: any) => void,
+    handleChange: (value: any) => void,
     StyledTextArea: StyledComponent<any, any>,
     wrapStyle?: string
 }
@@ -19,19 +20,20 @@ const Wrap = styled.div<IWrapProps>`
 `
 
 const TextArea = ({value, handleChange, StyledTextArea, wrapStyle}: ITextAreaProps) => {
+    const [text, setText] = useState(value)
+    const debouncedText: string = useDebounce<string>(text, 500);
     const [edit, setEdit] = useState(false)
     const ref = useRef<any>(null);
 
+    const handleChangeText = (e: any) => setText(e.target.value)
     const handleEditStart = () => setEdit(true)
     const handleEditEnd = (e: any) => {
         setEdit(false)
-        console.log('Новое название - ' + e.target.value)
     }
 
     const handleKeyEnter = (e: any) => {
         if (e.keyCode === 13) {
             setEdit(false)
-            console.log('Новое название - ' + e.target.value)
         }
     }
 
@@ -41,17 +43,27 @@ const TextArea = ({value, handleChange, StyledTextArea, wrapStyle}: ITextAreaPro
         }
     }, [edit]);
 
+
+    useEffect(
+        () => {
+            if (debouncedText && debouncedText !== value) {
+                handleChange(text)
+            }
+        },
+        [debouncedText]
+    );
+
     return (
         <Wrap onClick={handleEditStart} styles={wrapStyle}>
             <StyledTextArea
-                value={value}
+                value={text}
                 disabled={!edit}
                 spellCheck={false}
                 dir={'auto'}
                 ref={ref}
                 maxLength={512}
                 onBlur={handleEditEnd}
-                onChange={handleChange}
+                onChange={handleChangeText}
                 onKeyDown={handleKeyEnter}
             />
         </Wrap>

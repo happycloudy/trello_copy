@@ -1,13 +1,13 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from "styled-components";
 import {AiOutlineEdit} from "react-icons/ai";
-import {useAppDispatch} from "../../store/hooks";
+import {useAppDispatch, useAppSelector} from "../../store/hooks";
 import TextareaAutosize from "react-textarea-autosize";
 import {IWorkSpace} from "../../interfaces/desk.interface";
 import renameWorkspace from "../../API/workspaces/renameWorkspace";
 import {FiTrash} from "react-icons/fi";
-import deleteDesk from "../../API/desks/deleteDesk";
 import deleteWorkspace from "../../API/workspaces/deleteWorkspace";
+import {useDebounce} from "../../hooks";
 
 interface IDeskItemProps {
     workspace: IWorkSpace,
@@ -46,12 +46,17 @@ const SettingsWrap = styled.div`
 
 
 const DeskItem = ({workspace, handleSelect}: IDeskItemProps) => {
+    const [value, setValue] = useState(workspace.name)
+    const debouncedName: string = useDebounce<string>(value, 500);
     const [editable, setEditable] = useState(false)
+    const {current} = useAppSelector(state => state.workspaces)
     const dispatch = useAppDispatch()
 
-    const handleChange = (e: any, workspace: IWorkSpace) => {
-        dispatch(renameWorkspace({value: e.target.value, id: workspace.id, path: 'name', op: 'add'}))
+    const handleSave = () => {
+        dispatch(renameWorkspace({value: value, id: workspace.id, path: 'name', op: 'add'}))
     }
+
+    const handleChange = (e: any) => setValue(e.target.value)
     const toggleRenameDesk = () => setEditable(!editable)
     const handleSelectDesk = () => {
         if (!editable) {
@@ -68,18 +73,32 @@ const DeskItem = ({workspace, handleSelect}: IDeskItemProps) => {
     const handleRemove = () => dispatch(deleteWorkspace(workspace.id))
 
 
+    useEffect(
+        () => {
+            if (debouncedName && debouncedName !== workspace.name) {
+                handleSave()
+            }
+        },
+        [debouncedName]
+    );
+
     return (
         <>
             <Wrap onClick={handleSelectDesk}>
-                <StyledDeskItem value={workspace.name}
-                                onChange={(e: any) => handleChange(e, workspace)}
+                <StyledDeskItem value={value}
+                                onChange={handleChange}
                                 onKeyDown={(e: any) => handleKeyEnter(e, workspace)}
                                 disabled={!editable}
                                 onBlur={handleBlur}/>
             </Wrap>
             <SettingsWrap>
                 <AiOutlineEdit style={{marginLeft: '10px'}} onClick={toggleRenameDesk}/>
-                <FiTrash onClick={handleRemove}/>
+                {
+                    current && current.id !== workspace.id ?
+                        <FiTrash onClick={handleRemove}/>:
+                        <></>
+                }
+
             </SettingsWrap>
         </>
     );

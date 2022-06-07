@@ -7,19 +7,23 @@ import Register from "./components/Auth/Register";
 import {useAppDispatch, useAppSelector} from "./store/hooks";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import fetchInfo from "./API/user/fetchInfo";
+import Loader from "./components/Loader/Loader";
 
 
 function App() {
     const navigate = useNavigate()
-    const {auth} = useAppSelector(state => state.user.user)
+    const {auth, isLoading} = useAppSelector(state => ({
+        auth: state.user.user.auth,
+        isLoading: state.user.loading || state.workspaces.loading || state.desks.loading,
+    }))
     const dispatch = useAppDispatch()
 
     useEffect(() => {
         const token = localStorage.getItem('access_token')
-        if(token) {
+        if (token) {
             dispatch(fetchInfo(token)).then(res => {
                 // @ts-ignore
-                if(res.payload.hasOwnProperty('Id')){
+                if (res.payload.hasOwnProperty('Id')) {
                     navigate('/')
                 }
             })
@@ -40,6 +44,12 @@ function App() {
                 <Route path={'/register'} element={<Register/>}/>
                 <Route path={'*'} element={<PrivateRoute><Main/></PrivateRoute>}/>
             </Routes>
+
+            {
+                isLoading ?
+                    <Loader/> :
+                    <></>
+            }
         </div>
     );
 }

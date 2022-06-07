@@ -42,7 +42,7 @@ const markersSlice = createSlice({
             currentMarker!.color = color
         },
         [addMarker.fulfilled.type]: (state, action) => {
-
+            state.markers.push(action.payload)
         }
     },
 })

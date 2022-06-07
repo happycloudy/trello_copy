@@ -3,9 +3,10 @@ import styled from "styled-components";
 import {IMarker} from "../../../store/markers/markers.slice";
 import {IColumn, ITask} from "../../../interfaces/desk.interface";
 import StyledSubtitle from "./Tooltips/Subtitle";
+import {useAppSelector} from "../../../store/hooks";
 
 interface IMarkersProps {
-    markers: IMarker[],
+    taskMarkers: IMarker[],
     task: ITask,
     column: IColumn,
 }
@@ -38,7 +39,8 @@ const StyledMarker = styled.div<IStyledMarkerProps>`
   font-size: 14px;
 `
 
-const Markers = ({markers}: IMarkersProps) => {
+const Markers = ({taskMarkers}: IMarkersProps) => {
+    const {markers} = useAppSelector(state => state.markers)
     return (
         markers.length ?
             <StyledMarkers>
@@ -47,7 +49,7 @@ const Markers = ({markers}: IMarkersProps) => {
                 </StyledSubtitle>
                 <StyledMarkersWrap>
                     {
-                        markers.map(taskMarker => {
+                        taskMarkers.map(taskMarker => {
                             const marker = markers.find(marker => marker.id === taskMarker.id)
                             return (
                                 <StyledMarker color={marker!.color} key={marker!.id}>

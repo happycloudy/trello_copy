@@ -1,7 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import styled from "styled-components";
-import {useAppDispatch, useAppSelector} from "../../../../../store/hooks";
-import getUsers from "../../../../../API/user/getUsers";
+import {useAppSelector} from "../../../../../store/hooks";
 import {MdDownloadDone} from "react-icons/md/index";
 import {IUser} from "../../../../../interfaces/user.interface";
 
@@ -14,10 +13,13 @@ const StyledList = styled.ul`
   padding: 0;
   margin: 0;
   width: 100%;
+  max-height: 15vh;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
 `
 const StyledItem = styled.li`
   border-top: 1px solid #000;
-  border-bottom: 1px solid #000;
   padding: 10px 0;
   color: #000;
   display: flex;
@@ -26,6 +28,14 @@ const StyledItem = styled.li`
   gap: 15px;
   transition: 0.3s;
   cursor: pointer;
+
+  &:first-child {
+    border-top: none;
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
 
   &:hover {
     background: rgba(0, 0, 0, 0.1);
@@ -49,16 +59,15 @@ const Users = ({users, handleAdd}: IUsersProps) => {
             </StyledTitle>
             <StyledList>
                 {
-                    users ? users.map(user => {
+                    users ? users.map((user: any) => {
                         const deskUser = !!current!.users.find(deskUser => deskUser.id === user.id)
-
                         return (
                             <StyledItem key={user.id} onClick={() => handleAdd(user.id)}>
-                                {user.displayName}, {user.login}
+                                {user.display_name}, {user.login}
                                 {deskUser ? <MdDownloadDone/> : <></>}
                             </StyledItem>
                         )
-                    }): <></>
+                    }) : <></>
                 }
             </StyledList>
         </>

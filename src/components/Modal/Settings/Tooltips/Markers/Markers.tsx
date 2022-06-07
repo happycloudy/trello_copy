@@ -46,7 +46,10 @@ const Markers = ({column, task}: IMarkersProps) => {
             dispatch(addMarkerToTask({marker: marker, taskId: task.id, columnId: column.id}))
         }
     }
-    const handleAddMarker = () => dispatch(addMarker(current!.id))
+    const handleAddMarker = () => dispatch(addMarker({
+        markerId: markers.reduce((curr, next) => curr < next.id ? next.id : curr, 0) + 1,
+        deskId: current!.id,
+    }))
 
 
     return (

@@ -64,6 +64,7 @@ const workspacesSlice = createSlice({
 
 
         [getWorkspaceData.fulfilled.type]: (state,action) => {
+            state.loading = false
             state.current = {
                 id: action.payload.Id,
                 name: action.payload.Name,
@@ -71,14 +72,29 @@ const workspacesSlice = createSlice({
                 users: action.payload.User
             }
         },
+        [getWorkspaceData.pending.type]: (state) => {
+            state.loading = true
+        },
+
 
         [renameWorkspace.fulfilled.type]: (state,action) => {
+            state.loading = false
             const workspace = state.workspaces.find(workspace => workspace.id === action.payload.id)
             workspace!.name = action.payload.name
+            if(state.current && state.current.id === action.payload.id){
+                state.current.name = action.payload.name
+            }
+        },
+        [renameWorkspace.fulfilled.type]: (state) => {
+            state.loading = true
         },
 
         [deleteWorkspace.fulfilled.type]: (state,action) => {
+            state.loading = false
             state.workspaces = state.workspaces.filter(workspace => workspace.id !== action.payload.id)
+        },
+        [deleteWorkspace.fulfilled.type]: (state) => {
+            state.loading = true
         },
     }
 })

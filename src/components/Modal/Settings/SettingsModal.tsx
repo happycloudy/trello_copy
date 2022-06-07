@@ -91,7 +91,7 @@ const SettingsModal = ({active, handleClose, task, column}: ISettingsModalProps)
     const ref = useRef(null)
     const dispatch = useAppDispatch()
 
-    const handleChange = (e: any) => dispatch(renameTask({value: e.target.value, id: task.id, path: 'name', op: 'add'}))
+    const handleChange = (value: any) => dispatch(renameTask({value: value, id: task.id, path: 'name', op: 'add'}))
     useOnClickOutside(ref, () => {
         handleClose()
     })
@@ -111,15 +111,15 @@ const SettingsModal = ({active, handleClose, task, column}: ISettingsModalProps)
                                     В колонке <UnderlineText>{column.title}</UnderlineText>
                                 </TitleSmall>
                             </div>
-                            <Markers task={task} column={column} markers={task.markers}/>
+                            <Markers task={task} column={column} taskMarkers={task.markers}/>
                             <DateComponent date={task.date} column={column} task={task}/>
                             <ContentWrap>
                                 <TextWrap>
                                     <DescriptionWrap>
-                                        <Description task={task}/>
+                                        <Description task={task} column={column}/>
                                     </DescriptionWrap>
                                     <CommentsWrap>
-                                        <Comments/>
+                                        <Comments task={task} column={column}/>
                                     </CommentsWrap>
                                 </TextWrap>
                             </ContentWrap>

@@ -14,11 +14,9 @@ const removeMarkerFromTask = createAsyncThunk(
         try {
             let res = await client.patch(`/cards/${payload.taskId}`, [
                 {
-                    op: 'add',
-                    path: `color_stamps_relaion_card/-`,
-                    value: {
-                        id: payload.marker.id
-                    },
+                    op: 'remove',
+                    path: `color_stamps_relaion_card/${payload.marker.id}`,
+                    value: {},
                 },
             ])
 

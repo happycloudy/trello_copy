@@ -18,7 +18,7 @@ const renameWorkspace = createAsyncThunk(
             let res = await client.patch(`/boards/${id}`, [payload])
 
             if(res.status === 200) {
-                return {name : res.data.board_name, id: id}
+                return {name : res.data.BoardName, id: id}
             }
         } catch (e) {
             return thunkApi.rejectWithValue(e)

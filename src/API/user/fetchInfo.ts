@@ -13,6 +13,7 @@ const fetchInfo = createAsyncThunk(
                 return undefined
             }
         } catch (e: any) {
+            console.log(e.response.data)
             // @ts-ignore
             return thunkApi.rejectWithValue(e.response.data.errorText)
         }

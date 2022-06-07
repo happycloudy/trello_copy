@@ -1,10 +1,14 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Subtitle} from "./Subtitle";
-import {ITask} from "../../../interfaces/desk.interface";
+import {IColumn, ITask} from "../../../interfaces/desk.interface";
 import styled from "styled-components";
+import {useDebounce} from "../../../hooks";
+import {useAppDispatch} from "../../../store/hooks";
+import saveDescription from "../../../API/tasks/saveDescription";
 
 interface IDescriptionProps {
-    task: ITask
+    task: ITask,
+    column: IColumn,
 }
 
 const DescriptionArea = styled.textarea`
@@ -29,16 +33,34 @@ const DescriptionArea = styled.textarea`
   }
 `
 
-const Description = ({task}: IDescriptionProps) => {
+const Description = ({task, column}: IDescriptionProps) => {
+    const [description, setDescription] = useState(task.description)
+    const debouncedName: string = useDebounce<string>(description, 500);
+
     const handleResize = (e: any) => {
         e.target.style.height = "auto";
         e.target.style.height = (e.target.scrollHeight) + "px";
     };
+    const handleChange = (e: any) => setDescription(e.target.value)
+    const dispatch = useAppDispatch()
+
+    useEffect(
+        () => {
+            if (debouncedName && debouncedName !== task.description) {
+                dispatch(saveDescription({
+                    taskId: task.id,
+                    columnId: column.id,
+                    value: description
+                }))
+            }
+        },
+        [debouncedName]
+    );
 
     return (
         <>
             <Subtitle>Описание</Subtitle>
-            <DescriptionArea onInput={handleResize} placeholder={'Добавьте более подробное описание...'}/>
+            <DescriptionArea onInput={handleResize} value={description} onChange={handleChange} placeholder={'Добавьте более подробное описание...'}/>
         </>
     );
 };

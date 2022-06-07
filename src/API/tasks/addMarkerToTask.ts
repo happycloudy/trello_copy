@@ -15,10 +15,8 @@ const addMarkerToTask = createAsyncThunk(
             let res = await client.patch(`/cards/${payload.taskId}`, [
                 {
                     op: 'add',
-                    path: `color_stamps_relaion_card/-`,
-                    value: {
-                        id: payload.marker.id
-                    },
+                    path: `color_stamps_relaion_card/${payload.marker.id}`,
+                    value: {},
                 },
             ])
 

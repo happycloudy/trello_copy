@@ -16,7 +16,6 @@ const renameTask = createAsyncThunk(
         delete payload.id
         try {
             let res = await client.patch(`/cards/${id}`, [payload])
-            console.log(res.data)
 
             if(res.status === 200) {
                 return {name : res.data.Name, columnId: res.data.ColumnId, taskId: id}
